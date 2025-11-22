@@ -1,35 +1,29 @@
-// مجرد رسالة تظهر في الـ Console للتأكد أن الملف شغال
-console.log("Main JS Loaded Successfully");
+// الانتظار حتى يتم تحميل جميع عناصر الصفحة بالكامل
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // محددات صفحة الخدمات
+    const serviceCards = document.querySelectorAll('.service-card');
 
-// مثال: فتح و غلق الـ Menu (لو عملنا Navbar في المستقبل)
-const menuBtn = document.getElementById("menuBtn");
-const navMenu = document.getElementById("navMenu");
+    // التأكد من وجود بطاقات خدمات قبل تطبيق الـ event listener
+    if (serviceCards.length > 0) {
+        
+        // تطبيق وظيفة النقر على كل بطاقة
+        serviceCards.forEach(card => {
+            card.addEventListener('click', () => {
+                
+                // أولاً: إلغاء التفعيل من أي بطاقة أخرى قد تكون نشطة
+                serviceCards.forEach(otherCard => {
+                    // إذا لم تكن البطاقة الحالية و كانت تحتوي على الفئة 'active'
+                    if (otherCard !== card && otherCard.classList.contains('active')) {
+                        otherCard.classList.remove('active');
+                    }
+                });
 
-if (menuBtn) {
-  menuBtn.addEventListener("click", () => {
-    navMenu.classList.toggle("open");
-  });
-}
+                // ثانياً: تبديل (Toggle) فئة 'active' على البطاقة التي تم النقر عليها
+                card.classList.toggle('active');
+            });
+        });
+    }
 
-// تجهيز المشروع لاستقبال API بعدين (ده placeholder)
-async function fetchSatelliteData() {
-  try {
-    console.log("Preparing to connect with PlantLabs API...");
-    // هنا هنضيف كود API بعدين
-  } catch (error) {
-    console.error("API Error:", error);
-  }
-}
-
-menuBtn.addEventListener("click", () => {
-  navMenu.classList.toggle("open");
-});
-window.addEventListener("load", () => {
-  const elements = document.querySelectorAll(".fade-in");
-  elements.forEach((el, i) => {
-    setTimeout(() => {
-      el.style.opacity = "1";
-      el.style.transform = "translateY(0)";
-    }, i * 200);
-  });
+    // هنا يمكنك إضافة أي أكواد JavaScript تفاعلية أخرى تخص الموقع
 });

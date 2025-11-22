@@ -3,45 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تواصل معنا - شركة الزراعة الذكية</title>
-
+    <title>SMART AGRI - اتصل بنا</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-    <header>
+    <header class="main-header">
+        <div class="logo">امين معبد / SMART AGRI</div>
         <nav>
-            <h2 class="logo">Smart Agri</h2>
             <ul>
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="about.html">من نحن</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="dashboard.html">لوحة البيانات</a></li>
-                <li><a class="active" href="contact.html">تواصل</a></li>
+                <li><a href="services.html">خدماتنا</a></li>
+                <li><a href="contact.html" class="active">اتصل بنا</a></li>
+                <li><a href="dashboard.html">لوحة التحكم</a></li>
             </ul>
         </nav>
     </header>
 
-    <section class="page-content">
-        <h1>تواصل معنا</h1>
+    <main class="contact-page-content">
+        
+        <section class="page-intro">
+            <h1>تواصل معنا</h1>
+            <p>سواء كان لديك سؤال عن خدماتنا، أو طلب دعم فني، أو استفسار عن شراكة، فريقنا مستعد للمساعدة.</p>
+        </section>
 
-        <form class="contact-form">
-            <label>الاسم</label>
-            <input type="ENG/Amin Hussien Meabed" placeholder="اسمك">
+        <section class="contact-container">
+            <div class="contact-form-box">
+                <h2>أرسل رسالة</h2>
+                <form action="process.php" method="POST" class="contact-form">
+                    
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
 
-            <label>البريد الإلكتروني</label>
-            <input type="ah2938@fayoum.edu.eg" placeholder="example@gmail.com">
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">الموضوع:</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
 
-            <label>الرسالة</label>
-            <textarea placeholder="اكتب رسالتك هنا"></textarea>
+                    <div class="form-group">
+                        <label for="message">رسالتك:</label>
+                        <textarea id="message" name="message" rows="6" required></textarea>
+                    </div>
 
-            <button type="submit">إرسال</button>
-        </form>
-    </section>
+                    <button type="submit" class="cta-button">إرسال الرسالة</button>
+                </form>
+            </div>
+
+            <div class="contact-info-box">
+                <h2>معلومات التواصل المباشر</h2>
+        
+                <p><strong>الهاتف:</strong> +201113736977</p>
+                <p><strong>البريد:</strong> ah2938@fayoum.edu.eg</p>
+                <hr>
+                
+                
+                    
+                </div>
+            </div>
+
+        </section>
+    </main>
 
     <footer>
-        <p>© 2025 Smart Agri Company - جميع الحقوق محفوظة</p>
+        <p>&copy; 2025 SMART AGRI. جميع الحقوق محفوظة.</p>
     </footer>
-
+    
+    <script src="js/main.js"></script>
 </body>
 </html>
