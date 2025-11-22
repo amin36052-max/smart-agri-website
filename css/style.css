@@ -12,171 +12,12 @@
 }
 
 /* -----------------------------------------------------------------
-   2. إعادة تعيين التنسيق الأساسي (Reset & Base Styling)
+   2. تضمين خط Cairo من Google Fonts
    ----------------------------------------------------------------- */
-* {
-    /* تطبيق الحواف المستديرة على جميع العناصر التي تحتوي على خاصية border-radius */
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Arial', sans-serif; /* يمكن تغييره لخط عربي أفضل */
-    line-height: 1.6;
-    color: var(--color-text-dark);
-    background-color: var(--color-background-light); /* خلفية بيضاء فاتحة */
-    direction: rtl; /* لدعم اللغة العربية */
-    text-align: right;
-}
-
-/* تنسيق الروابط العامة */
-a {
-    text-decoration: none;
-    color: var(--color-accent-blue);
-    transition: color var(--transition-speed);
-}
-
-a:hover {
-    color: var(--color-primary-green);
-}
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
 /* -----------------------------------------------------------------
-   3. تنسيق شريط التنقل (Header & Navigation)
-   ----------------------------------------------------------------- */
-.main-header {
-    background-color: white; /* خلفية شريط التنقل بيضاء واضحة */
-    padding: 15px 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف */
-}
-
-.logo {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: var(--color-primary-green); /* شعار الشركة باللون الأخضر */
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-}
-
-nav ul li {
-    margin-right: 25px;
-}
-
-nav ul li a {
-    color: var(--color-text-dark);
-    font-weight: 500;
-    padding: 5px 10px;
-    border-radius: var(--border-radius-base);
-    /* خاصية الانتقال (Transition) لإضافة الحركة التفاعلية */
-    transition: background-color var(--transition-speed), color var(--transition-speed);
-}
-
-/* الحركة التفاعلية (Hover) على روابط التنقل */
-nav ul li a:hover,
-nav ul li .active {
-    background-color: var(--color-light-green); /* خلفية خضراء فاتحة عند التمرير */
-    color: white;
-}
-
-/* -----------------------------------------------------------------
-   4. قسم البطل (Hero Section)
-   ----------------------------------------------------------------- */
-.hero-section {
-    background-image: url('../images/farm-bg.jpg'); /* استخدام صورة الخلفية */
-    background-size: cover;
-    background-position: center;
-    color: white; /* لون النص أبيض ليتناسب مع الخلفية */
-    text-align: center;
-    padding: 100px 20px;
-    min-height: 400px;
-    /* إضافة تظليل خفيف لضمان وضوح النص فوق الصورة */
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* طبقة تظليل خفيفة فوق الصورة لتحسين وضوح النص */
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.4); /* ظل أسود بنسبة 40% */
-}
-
-.hero-content {
-    position: relative; /* لجعل المحتوى فوق طبقة التظليل */
-    z-index: 10;
-}
-
-.hero-content h1 {
-    font-size: 3em;
-    margin-bottom: 15px;
-}
-
-.hero-content p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
-}
-
-/* -----------------------------------------------------------------
-   5. الأزرار والحركة التفاعلية (Buttons & Hover Effects)
-   ----------------------------------------------------------------- */
-.cta-button {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: var(--color-primary-green); /* لون الزر الأساسي أخضر غامق */
-    color: white;
-    font-weight: bold;
-    border: 2px solid var(--color-primary-green);
-    border-radius: var(--border-radius-base); /* تطبيق الحواف المستديرة */
-    cursor: pointer;
-    /* الحركة التفاعلية: لجعل الانتقال ناعمًا لجميع الخصائص */
-    transition: all var(--transition-speed) ease;
-}
-
-/* الحركة التفاعلية (Hover) على الأزرار - تغيير اللون والحجم قليلاً */
-.cta-button:hover {
-    background-color: var(--color-accent-blue); /* تغيير الخلفية إلى الأزرق */
-    border-color: var(--color-accent-blue);
-    transform: translateY(-2px); /* حركة صعود طفيفة */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل عند التمرير */
-}
-
-/* -----------------------------------------------------------------
-   6. التذييل (Footer)
-   ----------------------------------------------------------------- */
-footer {
-    background-color: var(--color-text-dark); /* خلفية غامقة للتذييل */
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    margin-top: 30px;
-}
-/* -----------------------------------------------------------------
-   1. المتغيرات والألوان الأساسية (Colors & Variables)
-   ----------------------------------------------------------------- */
-:root {
-    --color-primary-green: #38761d; /* أخضر غامق - للتركيز */
-    --color-light-green: #93c47d;   /* أخضر فاتح - للعناصر الثانوية */
-    --color-accent-blue: #4a86e8;   /* أزرق فاتح - للتميز والروابط */
-    --color-background-light: #f5f5f5; /* خلفية فاتحة جدًا (أبيض مائل للرمادي) */
-    --color-text-dark: #333333;      /* لون النص الأساسي */
-    --border-radius-base: 8px;      /* الحواف المستديرة الأساسية */
-    --transition-speed: 0.3s;       /* سرعة الانتقال للحركة التفاعلية */
-}
-
-/* -----------------------------------------------------------------
-   2. إعادة تعيين التنسيق الأساسي (Reset & Base Styling)
+   3. إعادة تعيين التنسيق الأساسي (Reset & Base Styling)
    ----------------------------------------------------------------- */
 * {
     box-sizing: border-box;
@@ -185,7 +26,7 @@ footer {
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Cairo', sans-serif; /* تطبيق خط Cairo على كامل الجسم */
     line-height: 1.6;
     color: var(--color-text-dark);
     background-color: var(--color-background-light);
@@ -204,7 +45,7 @@ a:hover {
 }
 
 /* -----------------------------------------------------------------
-   3. تنسيق شريط التنقل (Header & Navigation)
+   4. تنسيق شريط التنقل (Header & Navigation)
    ----------------------------------------------------------------- */
 .main-header {
     background-color: white; 
@@ -245,16 +86,18 @@ nav ul li .active {
 }
 
 /* -----------------------------------------------------------------
-   4. قسم البطل (Hero Section)
+   5. قسم البطل (Hero Section) - التعديلات هنا
    ----------------------------------------------------------------- */
 .hero-section {
     background-image: url('../images/farm-bg.jpg');
-    background-size: cover;
+    /* التعديلات لظهور الصورة بالكامل وتكبير الخط */
+    background-size: contain; /* تغيير من cover إلى contain */
+    background-repeat: no-repeat; /* منع تكرار الصورة */
     background-position: center;
     color: white;
     text-align: center;
     padding: 100px 20px;
-    min-height: 400px;
+    min-height: 500px; /* زيادة ارتفاع القسم ليتناسب مع الصورة */
     position: relative;
     display: flex;
     align-items: center;
@@ -277,17 +120,18 @@ nav ul li .active {
 }
 
 .hero-content h1 {
-    font-size: 3em;
+    font-size: 4em; /* زيادة حجم الخط */
     margin-bottom: 15px;
+    font-weight: 700; /* جعل الخط أكثر سمكًا */
 }
 
 .hero-content p {
-    font-size: 1.2em;
+    font-size: 1.5em; /* زيادة حجم الخط */
     margin-bottom: 30px;
 }
 
 /* -----------------------------------------------------------------
-   5. الأزرار والحركة التفاعلية (Buttons & Hover Effects)
+   6. الأزرار والحركة التفاعلية (Buttons & Hover Effects)
    ----------------------------------------------------------------- */
 .cta-button {
     display: inline-block;
@@ -325,7 +169,7 @@ nav ul li .active {
 }
 
 /* -----------------------------------------------------------------
-   6. التذييل (Footer)
+   7. التذييل (Footer)
    ----------------------------------------------------------------- */
 footer {
     background-color: var(--color-text-dark); 
@@ -336,7 +180,7 @@ footer {
 }
 
 /* -----------------------------------------------------------------
-   7. تنسيق صفحة الخدمات (Services Page Styling)
+   8. تنسيق صفحة الخدمات (Services Page Styling)
    ----------------------------------------------------------------- */
 .services-page-content {
     padding: 40px 5%;
@@ -370,21 +214,19 @@ footer {
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     transition: all var(--transition-speed) ease-in-out;
-    position: relative; /* مهم لـ z-index */
+    position: relative;
 }
 
-/* الحركة التفاعلية عند التمرير بالماوس (Hover) */
 .service-card:hover {
-    transform: translateY(-5px); /* رفع البطاقة قليلاً للأعلى */
+    transform: translateY(-5px); 
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); 
-    cursor: pointer; /* مؤشر اليد للدلالة على أنها قابلة للنقر */
+    cursor: pointer; 
 }
 
-/* الحركة التفاعلية عند النقر (Active State) - التكبير والتركيز */
 .service-card.active {
-    transform: scale(1.05); /* تكبير البطاقة بنسبة 5% */
-    box-shadow: 0 15px 30px rgba(var(--color-accent-blue), 0.3); /* ظل أزرق مميز */
-    z-index: 20; /* رفعها فوق البطاقات الأخرى لتبدو في المقدمة */
+    transform: scale(1.05); 
+    box-shadow: 0 15px 30px rgba(var(--color-accent-blue), 0.3); 
+    z-index: 20; 
     border-color: var(--color-accent-blue); 
 }
 
@@ -402,31 +244,28 @@ footer {
     padding: 40px 20px;
     border-radius: var(--border-radius-base);
 }
-/* -----------------------------------------------------------------
-   8. تنسيق صفحة الاتصال (Contact Page Styling)
-   ----------------------------------------------------------------- */
 
+/* -----------------------------------------------------------------
+   9. تنسيق صفحة الاتصال (Contact Page Styling)
+   ----------------------------------------------------------------- */
 .contact-page-content {
     padding: 40px 5%;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* تنسيق الحاوية الرئيسية التي تحتوي على النموذج والمعلومات */
 .contact-container {
     display: grid;
-    /* عمودين متساويين في الشاشات الكبيرة */
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 30px;
     margin-top: 30px;
 }
 
-/* تنسيق مربع النموذج ومربع المعلومات */
 .contact-form-box,
 .contact-info-box {
     background-color: white;
     padding: 30px;
-    border-radius: var(--border-radius-base); /* تطبيق الحواف المستديرة */
+    border-radius: var(--border-radius-base);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -436,7 +275,6 @@ footer {
     margin-bottom: 20px;
 }
 
-/* تنسيق حقول النموذج */
 .form-group {
     margin-bottom: 20px;
 }
@@ -453,20 +291,18 @@ footer {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
-    border-radius: var(--border-radius-base); /* تطبيق الحواف المستديرة */
+    border-radius: var(--border-radius-base);
     font-size: 1em;
     transition: border-color var(--transition-speed);
 }
 
-/* الحركة التفاعلية (Focus) على حقول الإدخال */
 .contact-form input:focus,
 .contact-form textarea:focus {
-    border-color: var(--color-accent-blue); /* إطار أزرق عند التركيز */
+    border-color: var(--color-accent-blue);
     outline: none;
     box-shadow: 0 0 5px rgba(var(--color-accent-blue), 0.5);
 }
 
-/* تنسيق معلومات التواصل */
 .contact-info-box p {
     margin-bottom: 15px;
 }
@@ -480,19 +316,18 @@ footer {
     justify-content: center;
     align-items: center;
     color: #666;
-    border-radius: var(--border-radius-base); /* تطبيق الحواف المستديرة على الخريطة */
+    border-radius: var(--border-radius-base);
 }
-/* -----------------------------------------------------------------
-   9. تنسيق صفحة من نحن (About Page Styling)
-   ----------------------------------------------------------------- */
 
+/* -----------------------------------------------------------------
+   10. تنسيق صفحة من نحن (About Page Styling)
+   ----------------------------------------------------------------- */
 .about-page-content {
     padding: 40px 5%;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* تنسيق قسم الرؤية والرسالة */
 .vision-mission-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -503,14 +338,13 @@ footer {
 .vision, .mission {
     background-color: white;
     padding: 30px;
-    border-radius: var(--border-radius-base); /* حواف مستديرة */
+    border-radius: var(--border-radius-base);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    /* إضافة حركة تفاعلية بسيطة */
     transition: transform var(--transition-speed);
 }
 
 .vision:hover, .mission:hover {
-    transform: translateY(-3px); /* رفع خفيف عند التمرير */
+    transform: translateY(-3px);
 }
 
 .vision h2, .mission h2 {
@@ -518,7 +352,6 @@ footer {
     margin-bottom: 15px;
 }
 
-/* تنسيق قسم القيم الأساسية */
 .values-section {
     margin-bottom: 50px;
     text-align: center;
@@ -539,12 +372,12 @@ footer {
     background-color: #ffffff;
     padding: 20px;
     border: 1px solid var(--color-light-green);
-    border-radius: var(--border-radius-base); /* حواف مستديرة */
+    border-radius: var(--border-radius-base);
     transition: background-color var(--transition-speed);
 }
 
 .value-item:hover {
-    background-color: var(--color-light-green); /* خلفية خضراء فاتحة عند التمرير */
+    background-color: var(--color-light-green);
     color: white;
 }
 
@@ -554,11 +387,9 @@ footer {
 }
 
 .value-item:hover h3 {
-    color: white; /* تغيير لون العنوان للأبيض عند التمرير */
+    color: white;
 }
 
-
-/* تنسيق قسم الفريق */
 .team-section {
     text-align: center;
 }
@@ -568,24 +399,21 @@ footer {
     height: 300px;
     background-color: #eee;
     margin-top: 20px;
-    border-radius: var(--border-radius-base); /* حواف مستديرة */
-    overflow: hidden; /* لإخفاء الصورة التي ستوضع لاحقًا */
+    border-radius: var(--border-radius-base);
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 /* -----------------------------------------------------------------
-   10. قواعد الاستجابة (Media Queries for Responsiveness)
+   11. قواعد الاستجابة (Media Queries for Responsiveness)
    ----------------------------------------------------------------- */
 
-/* -------------------------------------------------
-   القواعد الخاصة بالشاشات اللوحية والموبايل (عرض أقصى 768 بكسل)
-   ------------------------------------------------- */
 @media (max-width: 768px) {
     
-    /* 1. شريط التنقل (Header) */
     .main-header {
-        flex-direction: column; /* جعل العناصر تتكدس فوق بعضها */
+        flex-direction: column; 
         align-items: flex-start;
         padding-bottom: 10px;
     }
@@ -595,7 +423,7 @@ footer {
     }
 
     nav ul {
-        flex-direction: column; /* جعل الروابط عمودية */
+        flex-direction: column;
         width: 100%;
     }
 
@@ -606,59 +434,52 @@ footer {
     }
 
     nav ul li a {
-        display: block; /* لجعل الروابط تأخذ عرض السطر بالكامل */
+        display: block; 
         padding: 10px 15px;
         margin-bottom: 5px;
     }
 
-    /* 2. قسم البطل (Hero Section) */
     .hero-content h1 {
-        font-size: 2em; /* تصغير حجم العنوان */
+        font-size: 2.5em; /* تصغير حجم العنوان على الموبايل */
+    }
+    .hero-content p {
+        font-size: 1.2em; /* تصغير حجم الفقرة على الموبايل */
     }
 
-    /* 3. تنسيق صفحة الخدمات (Services Page) */
     .services-grid {
-        /* ستقوم خاصية auto-fit بعمل جيد هنا، لكن نضمن عرض عمود واحد */
         grid-template-columns: 1fr;
     }
     
-    /* عند التفعيل، نلغي التكبير حتى لا تخرج البطاقة من الشاشة */
     .service-card.active {
         transform: scale(1.0); 
     }
 
-    /* 4. تنسيق صفحة الاتصال (Contact Page) */
     .contact-container {
-        grid-template-columns: 1fr; /* عمود واحد بدلاً من عمودين */
+        grid-template-columns: 1fr;
     }
 
-    /* 5. تنسيق صفحة من نحن (About Page) */
     .vision-mission-section {
-        grid-template-columns: 1fr; /* عمود واحد بدلاً من عمودين */
+        grid-template-columns: 1fr;
     }
     
     .values-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* تصغير حجم العناصر في شبكة القيم */
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
 
 }
 
-/* -------------------------------------------------
-   القواعد الخاصة بالشاشات الصغيرة جدًا (عرض أقصى 480 بكسل)
-   ------------------------------------------------- */
 @media (max-width: 480px) {
     
-    /* زيادة حجم خطوط النص قليلاً للقراءة الأسهل على الموبايل */
     body {
         font-size: 16px;
     }
     
     .hero-content {
-        padding: 0 10px; /* تقليل الحشو حول المحتوى */
+        padding: 0 10px;
     }
     
     .cta-button {
-        width: 90%; /* جعل الأزرار تأخذ عرض الشاشة تقريباً */
+        width: 90%;
         box-sizing: border-box; 
     }
 }
