@@ -86,16 +86,18 @@ nav ul li .active {
 }
 
 /* -----------------------------------------------------------------
-   تنسيق قائمة الهامبرغر
+   تنسيق قائمة الهامبرغر - (تعديلات على الموضع)
    ----------------------------------------------------------------- */
 .menu-toggle {
-    display: none; /* إخفاؤه افتراضياً في وضع سطح المكتب */
+    display: none; 
     background: none;
     border: none;
     cursor: pointer;
-    padding: 10px;
+    /* تصغير الحشو لتقريب الأيقونة من الشعار */
+    padding: 5px; 
     position: relative;
     z-index: 30; 
+    height: 35px; /* لتحديد منطقة النقر */
 }
 
 /* شكل أيقونة الشرطات الثلاثة */
@@ -114,28 +116,36 @@ nav ul li .active {
 .hamburger-icon::after {
     content: '';
     position: absolute;
-    left: 10px;
+    /* تحديد موقع البداية للخطين العلوي والسفلي */
+    left: 10px; 
 }
 
+/* الشرطة العلوية: 
+   يتم وضعها أعلى الشرطة الوسطى بـ 8 بكسل */
 .hamburger-icon::before {
-    top: 5px; 
+    top: 8px; 
 }
 
+/* الشرطة السفلية: 
+   يتم وضعها أسفل الشرطة الوسطى بـ 8 بكسل */
 .hamburger-icon::after {
-    top: 25px; 
+    top: 22px; 
 }
 
 /* حالة الفتح (شكل X) */
 .menu-toggle[aria-expanded="true"] .hamburger-icon {
-    background-color: transparent;
+    /* جعل الشرطة الوسطى شفافة */
+    background-color: transparent; 
 }
 .menu-toggle[aria-expanded="true"] .hamburger-icon::before {
     transform: rotate(45deg);
-    top: 15px;
+    /* تجميع الخطين في المنتصف قبل التدوير */
+    top: 15px; 
 }
 .menu-toggle[aria-expanded="true"] .hamburger-icon::after {
     transform: rotate(-45deg);
-    top: 15px;
+    /* تجميع الخطين في المنتصف قبل التدوير */
+    top: 15px; 
 }
 /* -----------------------------------------------------------------
    5. قسم البطل (Hero Section) - التعديلات هنا
@@ -149,7 +159,7 @@ nav ul li .active {
     color: white;
     text-align: center;
     padding: 100px 20px;
-    min-height: 500px; /* زيادة ارتفاع القسم ليتناسب مع الصورة */
+    min-height: 600px; /* زيادة ارتفاع القسم ليتناسب مع الصورة */
     position: relative;
     display: flex;
     align-items: center;

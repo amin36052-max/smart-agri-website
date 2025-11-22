@@ -1,25 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // كود قائمة الهامبرغر
+    
+    // 1. تحديد زر التبديل (menu-toggle) والقائمة (main-nav)
     const menuToggle = document.querySelector('.menu-toggle');
-    const mainNav = document.querySelector('#main-nav');
+    const mainNav = document.querySelector('#main-nav'); // يجب أن يكون ID في HTML هو main-nav
 
     if (menuToggle && mainNav) {
+        // 2. مستمع الحدث
         menuToggle.addEventListener('click', () => {
-            // تبديل فئة is-open التي تفتح القائمة في CSS
+            // إضافة وإزالة فئة is-open (التي تفتح القائمة في CSS)
             mainNav.classList.toggle('is-open');
 
-            // تحديث حالة إمكانية الوصول (Accessibility)
+            // تحديث حالة إمكانية الوصول
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
             menuToggle.setAttribute('aria-expanded', !isExpanded);
         });
     }
 
-    // (حافظ على الكود القديم الخاص ببطاقات الخدمات هنا بعد الكود الجديد)
-    const serviceCards = document.querySelectorAll('.service-card');
-    if (serviceCards.length > 0) {
-        // ... (بقية كود الخدمات)
-    }
+    // ... (بقية الأكواد مثل كود الخدمات يجب أن تكون موجودة هنا)
 });
+    
+
     
 
     // 💡 كود الخدمات القديم (يجب أن يكون موجوداً أيضاً) 💡
