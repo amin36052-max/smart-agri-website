@@ -2,13 +2,20 @@
    1. المتغيرات والألوان الأساسية (Colors & Variables)
    ----------------------------------------------------------------- */
 :root {
-    --color-primary-green: #38761d; /* أخضر غامق - للتركيز */
-    --color-light-green: #93c47d;   /* أخضر فاتح - للعناصر الثانوية */
-    --color-accent-blue: #4a86e8;   /* أزرق فاتح - للتميز والروابط */
-    --color-background-light: #f5f5f5; /* خلفية فاتحة جدًا (أبيض مائل للرمادي) */
-    --color-text-dark: #333333;      /* لون النص الأساسي */
-    --border-radius-base: 8px;      /* الحواف المستديرة الأساسية */
-    --transition-speed: 0.3s;       /* سرعة الانتقال للحركة التفاعلية */
+    --color-primary-green: #38761d;
+    /* أخضر غامق - للتركيز */
+    --color-light-green: #93c47d;
+    /* أخضر فاتح - للعناصر الثانوية */
+    --color-accent-blue: #4a86e8;
+    /* أزرق فاتح - للتميز والروابط */
+    --color-background-light: #f5f5f5;
+    /* خلفية فاتحة جدًا (أبيض مائل للرمادي) */
+    --color-text-dark: #333333;
+    /* لون النص الأساسي */
+    --border-radius-base: 8px;
+    /* الحواف المستديرة الأساسية */
+    --transition-speed: 0.3s;
+    /* سرعة الانتقال للحركة التفاعلية */
 }
 
 /* -----------------------------------------------------------------
@@ -26,11 +33,12 @@
 }
 
 body {
-    font-family: 'Cairo', sans-serif; /* تطبيق خط Cairo على كامل الجسم */
+    font-family: 'Cairo', sans-serif;
+    /* تطبيق خط Cairo على كامل الجسم */
     line-height: 1.6;
     color: var(--color-text-dark);
     background-color: var(--color-background-light);
-    direction: rtl; 
+    direction: rtl;
     text-align: right;
 }
 
@@ -48,7 +56,7 @@ a:hover {
    4. تنسيق شريط التنقل (Header & Navigation)
    ----------------------------------------------------------------- */
 .main-header {
-    background-color: white; 
+    background-color: white;
     padding: 15px 5%;
     display: flex;
     justify-content: space-between;
@@ -81,21 +89,25 @@ nav ul li a {
 
 nav ul li a:hover,
 nav ul li .active {
-    background-color: var(--color-light-green); 
+    background-color: var(--color-light-green);
     color: white;
 }
+
 /* -----------------------------------------------------------------/* -----------------------------------------------------------------
    تنسيق زر التبديل (menu-toggle) وأيقونة الهمبرغر (hamburger-icon)
    ----------------------------------------------------------------- */
 .menu-toggle {
-    display: none; /* يتم إخفاؤه في وضع سطح المكتب */
+    display: none;
+    /* يتم إخفاؤه في وضع سطح المكتب */
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
     position: relative;
-    z-index: 30; /* ليظهر فوق القائمة عند الفتح */
-    height: 30px; /* تحديد منطقة النقر */
+    z-index: 30;
+    /* ليظهر فوق القائمة عند الفتح */
+    height: 30px;
+    /* تحديد منطقة النقر */
     width: 45px;
 }
 
@@ -110,9 +122,12 @@ nav ul li .active {
     height: 3px;
     background-color: var(--color-primary-green);
     border-radius: 3px;
-    transition: all 0.3s ease; /* لإضافة حركة سلسة عند التبديل */
-    position: absolute; /* وضع مطلق للتحكم الدقيق في الموضع */
-    left: 10px;
+    transition: all 0.3s ease;
+    /* لإضافة حركة سلسة عند التبديل */
+    position: absolute;
+    /* وضع مطلق للتحكم الدقيق في الموضع */
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .hamburger-icon::before,
@@ -120,14 +135,14 @@ nav ul li .active {
     content: '';
 }
 
-/* الشرطة العلوية: توضع أعلى الشرطة الوسطى بـ 7 بكسل */
+/* الشرطة العلوية: توضع أعلى الشرطة الوسطى بـ 8 بكسل */
 .hamburger-icon::before {
-    top: 7px; 
+    top: -8px;
 }
 
-/* الشرطة السفلية: توضع أسفل الشرطة الوسطى بـ 7 بكسل */
+/* الشرطة السفلية: توضع أسفل الشرطة الوسطى بـ 8 بكسل */
 .hamburger-icon::after {
-    bottom: 7px; 
+    bottom: -8px;
 }
 
 
@@ -136,31 +151,39 @@ nav ul li .active {
    ----------------------------------------------------------------- */
 .menu-toggle[aria-expanded="true"] .hamburger-icon {
     /* جعل الخط الوسطي شفافاً ليختفي */
-    background-color: transparent; 
+    background-color: transparent;
 }
+
 .menu-toggle[aria-expanded="true"] .hamburger-icon::before {
     /* تدوير الخط العلوي بزاوية 45 درجة */
-    transform: rotate(45deg);
-    top: 15px; /* رفع الموضع إلى المنتصف */
+    transform: translateX(-50%) rotate(45deg);
+    top: 0;
+    /* محاذاة إلى المنتصف */
 }
+
 .menu-toggle[aria-expanded="true"] .hamburger-icon::after {
     /* تدوير الخط السفلي بزاوية -45 درجة */
-    transform: rotate(-45deg);
-    bottom: 15px; /* رفع الموضع إلى المنتصف */
+    transform: translateX(-50%) rotate(-45deg);
+    bottom: 0;
+    /* محاذاة إلى المنتصف */
 }
+
 /* -----------------------------------------------------------------
    5. قسم البطل (Hero Section) - التعديلات هنا
    ----------------------------------------------------------------- */
 .hero-section {
     background-image: url('../images/farm-bg.jpg');
     /* التعديلات لظهور الصورة بالكامل وتكبير الخط */
-    background-size: cover; /* تغيير من cover إلى contain */
-    background-repeat: no-repeat; /* منع تكرار الصورة */
+    background-size: cover;
+    /* تغيير من cover إلى contain */
+    background-repeat: no-repeat;
+    /* منع تكرار الصورة */
     background-position: center;
     color: white;
     text-align: center;
     padding: 100px 20px;
-    min-height: 600px; /* زيادة ارتفاع القسم ليتناسب مع الصورة */
+    min-height: 600px;
+    /* زيادة ارتفاع القسم ليتناسب مع الصورة */
     position: relative;
     display: flex;
     align-items: center;
@@ -183,13 +206,16 @@ nav ul li .active {
 }
 
 .hero-content h1 {
-    font-size: 4em; /* زيادة حجم الخط */
+    font-size: 4em;
+    /* زيادة حجم الخط */
     margin-bottom: 15px;
-    font-weight: 700; /* جعل الخط أكثر سمكًا */
+    font-weight: 700;
+    /* جعل الخط أكثر سمكًا */
 }
 
 .hero-content p {
-    font-size: 1.5em; /* زيادة حجم الخط */
+    font-size: 1.5em;
+    /* زيادة حجم الخط */
     margin-bottom: 30px;
 }
 
@@ -235,7 +261,7 @@ nav ul li .active {
    7. التذييل (Footer)
    ----------------------------------------------------------------- */
 footer {
-    background-color: var(--color-text-dark); 
+    background-color: var(--color-text-dark);
     color: white;
     text-align: center;
     padding: 20px 0;
@@ -273,7 +299,7 @@ footer {
     background-color: white;
     padding: 30px;
     border: 1px solid #ddd;
-    border-radius: var(--border-radius-base); 
+    border-radius: var(--border-radius-base);
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     transition: all var(--transition-speed) ease-in-out;
@@ -281,16 +307,16 @@ footer {
 }
 
 .service-card:hover {
-    transform: translateY(-5px); 
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); 
-    cursor: pointer; 
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .service-card.active {
-    transform: scale(1.05); 
-    box-shadow: 0 15px 30px rgba(var(--color-accent-blue), 0.3); 
-    z-index: 20; 
-    border-color: var(--color-accent-blue); 
+    transform: scale(1.05);
+    box-shadow: 0 15px 30px rgba(var(--color-accent-blue), 0.3);
+    z-index: 20;
+    border-color: var(--color-accent-blue);
 }
 
 .service-card h2 {
@@ -398,7 +424,8 @@ footer {
     margin-bottom: 50px;
 }
 
-.vision, .mission {
+.vision,
+.mission {
     background-color: white;
     padding: 30px;
     border-radius: var(--border-radius-base);
@@ -406,11 +433,13 @@ footer {
     transition: transform var(--transition-speed);
 }
 
-.vision:hover, .mission:hover {
+.vision:hover,
+.mission:hover {
     transform: translateY(-3px);
 }
 
-.vision h2, .mission h2 {
+.vision h2,
+.mission h2 {
     color: var(--color-accent-blue);
     margin-bottom: 15px;
 }
@@ -462,19 +491,23 @@ footer {
    ----------------------------------------------------------------- */
 .team-photo-container {
     width: 100%;
-    max-height: 400px; /* تحديد ارتفاع أقصى */
+    max-height: 400px;
+    /* تحديد ارتفاع أقصى */
     margin-top: 20px;
     border-radius: var(--border-radius-base);
-    overflow: hidden; /* لضمان أن الصورة تبقى داخل الحدود المستديرة */
+    overflow: hidden;
+    /* لضمان أن الصورة تبقى داخل الحدود المستديرة */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .team-image {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* لملء الحاوية بالصورة بدون تشويه (قص الأطراف) */
+    object-fit: cover;
+    /* لملء الحاوية بالصورة بدون تشويه (قص الأطراف) */
     display: block;
 }
+
 /* -----------------------------------------------------------------
    9. قواعد الاستجابة (Media Queries for Responsiveness)
    ----------------------------------------------------------------- */
@@ -483,8 +516,6 @@ footer {
    الشاشات المتوسطة والصغيرة (Tablet & Mobile) - العرض أقل من 768 بكسل
    ----------------------------------------------------------------- */
 @media (max-width: 768px) {
-    
-    }
 
     /* 2. إظهار زر التبديل (الهمبرغر) */
     .menu-toggle {
@@ -495,23 +526,27 @@ footer {
     nav {
         /* وضع القائمة في طبقة علوية لتظهر فوق المحتوى */
         position: absolute;
-        top: 60px; /* يجب أن تكون هذه القيمة أكبر من ارتفاع الـ Header */
+        top: 60px;
+        /* يجب أن تكون هذه القيمة أكبر من ارتفاع الـ Header */
         right: 0;
-        width: 80%; /* عرض القائمة المفتوحة */
-        max-height: 0; /* هذا هو مفتاح إخفاء القائمة */
-        overflow: hidden; 
-        background-color: white; 
+        width: 80%;
+        /* عرض القائمة المفتوحة */
+        max-height: 0;
+        /* هذا هو مفتاح إخفاء القائمة */
+        overflow: hidden;
+        background-color: white;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         z-index: 20;
         /* الحركة السلسة عند الفتح والإغلاق */
-        transition: max-height 0.3s ease-in-out; 
+        transition: max-height 0.3s ease-in-out;
     }
 
     /* 4. حالة الفتح (عند إضافة فئة .is-open بواسطة JavaScript) */
     nav.is-open {
-        max-height: 500px; /* قيمة كبيرة لضمان ظهور كل الروابط */
+        max-height: 500px;
+        /* قيمة كبيرة لضمان ظهور كل الروابط */
     }
-    
+
     /* 5. تنسيق الروابط داخل القائمة المفتوحة (عموديًا) */
     nav ul {
         flex-direction: column;
@@ -525,15 +560,16 @@ footer {
     }
 
     nav ul li a {
-        display: block; 
+        display: block;
         padding: 15px 20px;
         margin-bottom: 0;
     }
 
     /* 6. تنسيق الأقسام الأخرى لملائمة شاشة الموبايل */
     .hero-content h1 {
-        font-size: 2.5em; 
+        font-size: 2.5em;
     }
+
     .hero-content p {
         font-size: 1.2em;
     }
@@ -541,10 +577,10 @@ footer {
     .services-grid,
     .contact-container,
     .vision-mission-section {
-        grid-template-columns: 1fr; /* عرض عمود واحد لكل الأقسام الشبكية */
+        grid-template-columns: 1fr;
+        /* عرض عمود واحد لكل الأقسام الشبكية */
     }
-    
-    /* ... (يمكن إضافة المزيد من التعديلات على باقي الأقسام هنا) ... */
+}
 
 
 
@@ -552,13 +588,14 @@ footer {
    الشاشات الصغيرة جداً (Very Small Mobile) - العرض أقل من 480 بكسل
    ----------------------------------------------------------------- */
 @media (max-width: 480px) {
-    
+
     body {
         font-size: 16px;
     }
-    
+
     .cta-button {
-        width: 100%; /* جعل الأزرار تأخذ عرض الشاشة بالكامل */
-        box-sizing: border-box; 
+        width: 100%;
+        /* جعل الأزرار تأخذ عرض الشاشة بالكامل */
+        box-sizing: border-box;
     }
 }
