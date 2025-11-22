@@ -86,6 +86,58 @@ nav ul li .active {
 }
 
 /* -----------------------------------------------------------------
+   تنسيق قائمة الهامبرغر
+   ----------------------------------------------------------------- */
+.menu-toggle {
+    display: none; /* إخفاؤه افتراضياً في وضع سطح المكتب */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    position: relative;
+    z-index: 30; 
+}
+
+/* شكل أيقونة الشرطات الثلاثة */
+.hamburger-icon,
+.hamburger-icon::before,
+.hamburger-icon::after {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--color-primary-green);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+}
+
+.hamburger-icon::before {
+    top: 5px; 
+}
+
+.hamburger-icon::after {
+    top: 25px; 
+}
+
+/* حالة الفتح (شكل X) */
+.menu-toggle[aria-expanded="true"] .hamburger-icon {
+    background-color: transparent;
+}
+.menu-toggle[aria-expanded="true"] .hamburger-icon::before {
+    transform: rotate(45deg);
+    top: 15px;
+}
+.menu-toggle[aria-expanded="true"] .hamburger-icon::after {
+    transform: rotate(-45deg);
+    top: 15px;
+}
+/* -----------------------------------------------------------------
    5. قسم البطل (Hero Section) - التعديلات هنا
    ----------------------------------------------------------------- */
 .hero-section {
@@ -468,18 +520,54 @@ footer {
 
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     
-    body {
-        font-size: 16px;
+    /* 1. إظهار زر التبديل (الهمبرغر) */
+    .menu-toggle {
+        display: block;
     }
     
-    .hero-content {
-        padding: 0 10px;
+    /* 2. تنسيق الـ Header ليبقى الشعار والزر في سطر واحد */
+    .main-header {
+        flex-direction: row; /* التأكد من أن الاتجاه أفقي */
+        justify-content: space-between; /* المباعدة بين الشعار والزر */
+        align-items: center;
+    }
+
+    /* 3. إخفاء القائمة افتراضياً وتجهيزها للفتح */
+    nav {
+        position: absolute;
+        top: 60px; /* المسافة من أعلى الصفحة */
+        right: 0;
+        width: 80%; 
+        max-height: 0; /* الإخفاء باستخدام الارتفاع الأقصى */
+        overflow: hidden; 
+        background-color: white; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 20;
+        transition: max-height 0.3s ease-in-out; /* حركة سلسة */
+    }
+
+    /* 4. حالة الفتح (يضيفها JavaScript) */
+    nav.is-open {
+        max-height: 500px; /* قيمة كبيرة للفتح الكامل */
     }
     
-    .cta-button {
-        width: 90%;
-        box-sizing: border-box; 
+    /* 5. تنسيق الروابط عند فتح القائمة */
+    nav ul {
+        flex-direction: column;
+        padding: 10px 0;
     }
+
+    nav ul li {
+        margin-right: 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    nav ul li a {
+        padding: 15px 20px;
+        margin-bottom: 0;
+    }
+
+    /* (حافظ على باقي قواعد @media كما هي) */
 }

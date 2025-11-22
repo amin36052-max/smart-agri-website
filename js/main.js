@@ -1,3 +1,19 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // كود قائمة الهامبرغر
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainNav = document.querySelector('#main-nav');
+
+    if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', () => {
+            // تبديل فئة is-open التي تفتح القائمة في CSS
+            mainNav.classList.toggle('is-open');
+
+            // تحديث حالة إمكانية الوصول (Accessibility)
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+        });
+    }
+});
 // الانتظار حتى يتم تحميل جميع عناصر الصفحة بالكامل
 document.addEventListener('DOMContentLoaded', () => {
     
