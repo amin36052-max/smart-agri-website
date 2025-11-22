@@ -143,7 +143,7 @@ nav ul li .active {
 .hero-section {
     background-image: url('../images/farm-bg.jpg');
     /* التعديلات لظهور الصورة بالكامل وتكبير الخط */
-    background-size: contain; /* تغيير من cover إلى contain */
+    background-size: cover; /* تغيير من cover إلى contain */
     background-repeat: no-repeat; /* منع تكرار الصورة */
     background-position: center;
     color: white;
@@ -446,16 +446,23 @@ footer {
     text-align: center;
 }
 
-.team-placeholder {
+/* -----------------------------------------------------------------
+   تنسيق قسم الفريق الجديد
+   ----------------------------------------------------------------- */
+.team-photo-container {
     width: 100%;
-    height: 300px;
-    background-color: #eee;
+    max-height: 400px; /* تحديد ارتفاع أقصى */
     margin-top: 20px;
     border-radius: var(--border-radius-base);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden; /* لضمان أن الصورة تبقى داخل الحدود المستديرة */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* لملء الحاوية بالصورة بدون تشويه (قص الأطراف) */
+    display: block;
 }
 
 /* -----------------------------------------------------------------
