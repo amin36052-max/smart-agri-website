@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
             menuToggle.setAttribute('aria-expanded', !isExpanded);
         });
     }
+
+    // (حافظ على الكود القديم الخاص ببطاقات الخدمات هنا بعد الكود الجديد)
+    const serviceCards = document.querySelectorAll('.service-card');
+    if (serviceCards.length > 0) {
+        // ... (بقية كود الخدمات)
+    }
 });
 // الانتظار حتى يتم تحميل جميع عناصر الصفحة بالكامل
 document.addEventListener('DOMContentLoaded', () => {
