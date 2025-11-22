@@ -1,81 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // يجب أن تكون الفئة menu-toggle موجودة في زر HTML
+    /* -----------------------------------------------------------------
+       1. وظيفة قائمة الهامبرغر (Hamburger Menu Functionality)
+       ----------------------------------------------------------------- */
+    
+    // تحديد زر التبديل (class="menu-toggle") والقائمة (id="main-nav")
     const menuToggle = document.querySelector('.menu-toggle');
-    // يجب أن يكون ID main-nav موجوداً في عنصر nav في HTML
     const mainNav = document.querySelector('#main-nav'); 
 
     if (menuToggle && mainNav) {
+        // إضافة مستمع حدث عند النقر على الزر
         menuToggle.addEventListener('click', () => {
-            // إضافة وإزالة فئة is-open
-            mainNav.classList.toggle('is-open'); 
-
-            // تحديث حالة إمكانية الوصول
-            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
-            menuToggle.setAttribute('aria-expanded', !isExpanded);
-        });
-    }
-
-    // ... (بقية الأكواد)
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    
-    
-    // 1. تحديد زر التبديل (menu-toggle) والقائمة (main-nav)
-    const menuToggle = document.querySelector('.menu-toggle');
-    const mainNav = document.querySelector('#main-nav'); // يجب أن يكون ID في HTML هو main-nav
-
-    if (menuToggle && mainNav) {
-        // 2. مستمع الحدث
-        menuToggle.addEventListener('click', () => {
-            // إضافة وإزالة فئة is-open (التي تفتح القائمة في CSS)
+            
+            // تبديل (إضافة/إزالة) فئة is-open التي تفتح القائمة في CSS
             mainNav.classList.toggle('is-open');
 
-            // تحديث حالة إمكانية الوصول
+            // تحديث حالة إمكانية الوصول (Accessibility)
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
             menuToggle.setAttribute('aria-expanded', !isExpanded);
         });
     }
 
-    // ... (بقية الأكواد مثل كود الخدمات يجب أن تكون موجودة هنا)
-});
-    
-// الانتظار حتى يتم تحميل جميع عناصر الصفحة
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // 1. الحصول على جميع بطاقات الخدمات
+    /* -----------------------------------------------------------------
+       2. وظيفة تفعيل بطاقات الخدمات (Service Card Active State)
+       ----------------------------------------------------------------- */
+       
+    // تحديد جميع بطاقات الخدمات
     const serviceCards = document.querySelectorAll('.service-card');
 
-    // 2. تكرار (Loop) على كل بطاقة لإضافة مستمع حدث النقر
-    serviceCards.forEach(card => {
-        card.addEventListener('click', () => {
-            
-            // 3. إلغاء تفعيل (إزالة فئة 'active') من أي بطاقة أخرى قد تكون نشطة
-            serviceCards.forEach(otherCard => {
-                if (otherCard !== card && otherCard.classList.contains('active')) {
-                    otherCard.classList.remove('active');
-                }
+    if (serviceCards.length > 0) {
+        serviceCards.forEach(card => {
+            // إضافة مستمع حدث عند النقر على كل بطاقة
+            card.addEventListener('click', () => {
+                
+                // أولاً: إزالة الفئة النشطة (active) من جميع البطاقات الأخرى
+                serviceCards.forEach(otherCard => {
+                    if (otherCard !== card && otherCard.classList.contains('active')) {
+                        otherCard.classList.remove('active');
+                    }
+                });
+                
+                // ثانياً: تبديل الفئة النشطة (active) للبطاقة التي تم النقر عليها
+                card.classList.toggle('active');
             });
-
-            // 4. تبديل (Toggle) فئة 'active' على البطاقة التي تم النقر عليها
-            // إذا كانت نشطة، يتم إلغاء تنشيطها. إذا لم تكن، يتم تنشيطها.
-            card.classList.toggle('active');
-
-            // ملاحظة: يمكنك هنا إضافة المزيد من الإجراءات، مثل التمرير إلى البطاقة أو فتح نافذة منبثقة.
         });
-    });
-
-    // ----------------------------------------------------
-    // إضافة حركة تفاعلية بسيطة لقوائم التنقل (كمثال)
-    // ----------------------------------------------------
-    const navLinks = document.querySelectorAll('nav ul li a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            // يمكن إضافة تأثير هنا قبل الانتقال إلى الصفحة الجديدة
-            // e.preventDefault(); // لإيقاف الانتقال إذا أردت إظهار تأثير أولاً
-            // console.log(يتم الانتقال إلى: ${link.href});
-        });
-    });
-
+    }
 });
