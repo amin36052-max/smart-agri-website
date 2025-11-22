@@ -19,20 +19,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // ... (بقية الأكواد مثل كود الخدمات يجب أن تكون موجودة هنا)
 });
     
-
+// الانتظار حتى يتم تحميل جميع عناصر الصفحة
+document.addEventListener('DOMContentLoaded', () => {
     
-
-    // 💡 كود الخدمات القديم (يجب أن يكون موجوداً أيضاً) 💡
+    // 1. الحصول على جميع بطاقات الخدمات
     const serviceCards = document.querySelectorAll('.service-card');
-    if (serviceCards.length > 0) {
-        serviceCards.forEach(card => {
-            card.addEventListener('click', () => {
-                serviceCards.forEach(otherCard => {
-                    if (otherCard !== card && otherCard.classList.contains('active')) {
-                        otherCard.classList.remove('active');
-                    }
-                });
-                card.classList.toggle('active');
+
+    // 2. تكرار (Loop) على كل بطاقة لإضافة مستمع حدث النقر
+    serviceCards.forEach(card => {
+        card.addEventListener('click', () => {
+            
+            // 3. إلغاء تفعيل (إزالة فئة 'active') من أي بطاقة أخرى قد تكون نشطة
+            serviceCards.forEach(otherCard => {
+                if (otherCard !== card && otherCard.classList.contains('active')) {
+                    otherCard.classList.remove('active');
+                }
             });
+
+            // 4. تبديل (Toggle) فئة 'active' على البطاقة التي تم النقر عليها
+            // إذا كانت نشطة، يتم إلغاء تنشيطها. إذا لم تكن، يتم تنشيطها.
+            card.classList.toggle('active');
+
+            // ملاحظة: يمكنك هنا إضافة المزيد من الإجراءات، مثل التمرير إلى البطاقة أو فتح نافذة منبثقة.
         });
-    }
+    });
+
+    // ----------------------------------------------------
+    // إضافة حركة تفاعلية بسيطة لقوائم التنقل (كمثال)
+    // ----------------------------------------------------
+    const navLinks = document.querySelectorAll('nav ul li a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // يمكن إضافة تأثير هنا قبل الانتقال إلى الصفحة الجديدة
+            // e.preventDefault(); // لإيقاف الانتقال إذا أردت إظهار تأثير أولاً
+            // console.log(يتم الانتقال إلى: ${link.href});
+        });
+    });
+
+});
