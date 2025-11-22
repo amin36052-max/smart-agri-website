@@ -1,82 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project Dashboard</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #f5f5f5;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    .progress-container {
-      background: #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      height: 20px;
-      margin-top: 10px;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 40%;
-      background: #4CAF50;
-      transition: .3s;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    li {
-      margin: 5px 0;
-      padding: 8px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.1);
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Agri Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
 </head>
+
 <body>
-  <h1>Smart Agri Project Dashboard</h1>
+  <h1>Smart Agriculture Project Dashboard</h1>
 
   <div class="card">
-    <h2>Overall Progress</h2>
-    <p>Current completion: <strong>40%</strong></p>
+    <h2>Progress</h2>
     <div class="progress-container">
       <div class="progress-bar" id="progressBar"></div>
     </div>
+    <p id="progressText"></p>
   </div>
 
   <div class="card">
     <h2>Completed Tasks</h2>
-    <ul>
-      <li>✓ إنشاء مستودع GitHub</li>
-      <li>✓ ربط المشروع بـ Git</li>
-      <li>✓ نشر الموقع على GitHub Pages</li>
-    </ul>
+    <ul id="doneList"></ul>
   </div>
 
   <div class="card">
-    <h2>To‑Do Tasks</h2>
-    <ul>
-      <li>تصميم الصفحة الرئيسية</li>
-      <li>إضافة صفحة الخدمات</li>
-      <li>دمج API من PlantLabs</li>
-      <li>إنشاء صفحة Dashboard متقدمة</li>
-    </ul>
+    <h2>To-Do Tasks</h2>
+    <ul id="todoList"></ul>
   </div>
 
+  <script src="dashboard.js"></script>
 </body>
 </html>
