@@ -1,5 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // يجب أن تكون الفئة menu-toggle موجودة في زر HTML
+    const menuToggle = document.querySelector('.menu-toggle');
+    // يجب أن يكون ID main-nav موجوداً في عنصر nav في HTML
+    const mainNav = document.querySelector('#main-nav'); 
+
+    if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', () => {
+            // إضافة وإزالة فئة is-open
+            mainNav.classList.toggle('is-open'); 
+
+            // تحديث حالة إمكانية الوصول
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+        });
+    }
+
+    // ... (بقية الأكواد)
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    
     // 1. تحديد زر التبديل (menu-toggle) والقائمة (main-nav)
     const menuToggle = document.querySelector('.menu-toggle');
     const mainNav = document.querySelector('#main-nav'); // يجب أن يكون ID في HTML هو main-nav

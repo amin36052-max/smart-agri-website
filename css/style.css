@@ -84,20 +84,20 @@ nav ul li .active {
     background-color: var(--color-light-green); 
     color: white;
 }
-
 /* -----------------------------------------------------------------
-   تنسيق قائمة الهامبرغر - (تعديلات على الموضع)
+   تنسيق قائمة الهامبرغر (مراجعة دقيقة للموضع)
    ----------------------------------------------------------------- */
 .menu-toggle {
     display: none; 
     background: none;
     border: none;
     cursor: pointer;
-    /* تصغير الحشو لتقريب الأيقونة من الشعار */
-    padding: 5px; 
+    padding: 10px;
     position: relative;
     z-index: 30; 
-    height: 35px; /* لتحديد منطقة النقر */
+    /* تحديد ارتفاع المنطقة لـ 30 بكسل للتناسق */
+    height: 30px; 
+    width: 45px;
 }
 
 /* شكل أيقونة الشرطات الثلاثة */
@@ -110,42 +110,43 @@ nav ul li .active {
     background-color: var(--color-primary-green);
     border-radius: 3px;
     transition: all 0.3s ease;
+    /* الشرطة الوسطى (موضعها في منتصف مساحة الزر 15 بكسل) */
+    position: absolute; 
+    left: 10px;
 }
 
 .hamburger-icon::before,
 .hamburger-icon::after {
     content: '';
-    position: absolute;
-    /* تحديد موقع البداية للخطين العلوي والسفلي */
-    left: 10px; 
 }
 
 /* الشرطة العلوية: 
-   يتم وضعها أعلى الشرطة الوسطى بـ 8 بكسل */
+   توضع أعلى الشرطة الوسطى بـ 8 بكسل */
 .hamburger-icon::before {
-    top: 8px; 
+    top: 7px; 
 }
 
 /* الشرطة السفلية: 
-   يتم وضعها أسفل الشرطة الوسطى بـ 8 بكسل */
+   توضع أسفل الشرطة الوسطى بـ 7 بكسل */
 .hamburger-icon::after {
-    top: 22px; 
+    bottom: 7px; 
 }
 
-/* حالة الفتح (شكل X) */
+
+/* -----------------------------------------------------------------
+   حالة الفتح (شكل X)
+   ----------------------------------------------------------------- */
 .menu-toggle[aria-expanded="true"] .hamburger-icon {
-    /* جعل الشرطة الوسطى شفافة */
+    /* الخط الوسطي يختفي ليصبح شكل X واضحاً */
     background-color: transparent; 
 }
 .menu-toggle[aria-expanded="true"] .hamburger-icon::before {
     transform: rotate(45deg);
-    /* تجميع الخطين في المنتصف قبل التدوير */
-    top: 15px; 
+    top: 15px; /* يرتفع إلى منتصف الزر */
 }
 .menu-toggle[aria-expanded="true"] .hamburger-icon::after {
     transform: rotate(-45deg);
-    /* تجميع الخطين في المنتصف قبل التدوير */
-    top: 15px; 
+    bottom: 15px; /* يرتفع إلى منتصف الزر */
 }
 /* -----------------------------------------------------------------
    5. قسم البطل (Hero Section) - التعديلات هنا
@@ -474,103 +475,51 @@ footer {
     object-fit: cover; /* لملء الحاوية بالصورة بدون تشويه (قص الأطراف) */
     display: block;
 }
-
 /* -----------------------------------------------------------------
-   11. قواعد الاستجابة (Media Queries for Responsiveness)
+   9. قواعد الاستجابة (Media Queries for Responsiveness)
    ----------------------------------------------------------------- */
 
+/* -----------------------------------------------------------------
+   الشاشات المتوسطة والصغيرة (Tablet & Mobile) - العرض أقل من 768 بكسل
+   ----------------------------------------------------------------- */
 @media (max-width: 768px) {
     
+    /* 1. تنسيق شريط التنقل (Header) */
     .main-header {
-        flex-direction: column; 
-        align-items: flex-start;
-        padding-bottom: 10px;
+        /* إظهار العناصر في سطر واحد لترك المساحة للقائمة المنسدلة */
+        flex-direction: row; 
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 5%;
     }
 
-    .logo {
-        margin-bottom: 10px;
-    }
-
-    nav ul {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    nav ul li {
-        margin-right: 0;
-        text-align: right;
-        width: 100%;
-    }
-
-    nav ul li a {
-        display: block; 
-        padding: 10px 15px;
-        margin-bottom: 5px;
-    }
-
-    .hero-content h1 {
-        font-size: 2.5em; /* تصغير حجم العنوان على الموبايل */
-    }
-    .hero-content p {
-        font-size: 1.2em; /* تصغير حجم الفقرة على الموبايل */
-    }
-
-    .services-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .service-card.active {
-        transform: scale(1.0); 
-    }
-
-    .contact-container {
-        grid-template-columns: 1fr;
-    }
-
-    .vision-mission-section {
-        grid-template-columns: 1fr;
-    }
-    
-    .values-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-
-}
-
-@media (max-width: 768px) {
-    
-    /* 1. إظهار زر التبديل (الهمبرغر) */
+    /* 2. إظهار زر التبديل (الهمبرغر) */
     .menu-toggle {
         display: block;
     }
-    
-    /* 2. تنسيق الـ Header ليبقى الشعار والزر في سطر واحد */
-    .main-header {
-        flex-direction: row; /* التأكد من أن الاتجاه أفقي */
-        justify-content: space-between; /* المباعدة بين الشعار والزر */
-        align-items: center;
-    }
 
-    /* 3. إخفاء القائمة افتراضياً وتجهيزها للفتح */
+    /* 3. تنسيق وإخفاء القائمة الرئيسية */
     nav {
+        /* وضع القائمة في طبقة علوية لتظهر فوق المحتوى */
         position: absolute;
-        top: 60px; /* المسافة من أعلى الصفحة */
+        top: 60px; /* يجب أن تكون هذه القيمة أكبر من ارتفاع الـ Header */
         right: 0;
-        width: 80%; 
-        max-height: 0; /* الإخفاء باستخدام الارتفاع الأقصى */
+        width: 80%; /* عرض القائمة المفتوحة */
+        max-height: 0; /* هذا هو مفتاح إخفاء القائمة */
         overflow: hidden; 
         background-color: white; 
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         z-index: 20;
-        transition: max-height 0.3s ease-in-out; /* حركة سلسة */
+        /* الحركة السلسة عند الفتح والإغلاق */
+        transition: max-height 0.3s ease-in-out; 
     }
 
-    /* 4. حالة الفتح (يضيفها JavaScript) */
+    /* 4. حالة الفتح (عند إضافة فئة .is-open بواسطة JavaScript) */
     nav.is-open {
-        max-height: 500px; /* قيمة كبيرة للفتح الكامل */
+        max-height: 500px; /* قيمة كبيرة لضمان ظهور كل الروابط */
     }
     
-    /* 5. تنسيق الروابط عند فتح القائمة */
+    /* 5. تنسيق الروابط داخل القائمة المفتوحة (عموديًا) */
     nav ul {
         flex-direction: column;
         padding: 10px 0;
@@ -578,13 +527,45 @@ footer {
 
     nav ul li {
         margin-right: 0;
+        text-align: right;
         border-bottom: 1px solid #eee;
     }
 
     nav ul li a {
+        display: block; 
         padding: 15px 20px;
         margin-bottom: 0;
     }
 
-    /* (حافظ على باقي قواعد @media كما هي) */
+    /* 6. تنسيق الأقسام الأخرى لملائمة شاشة الموبايل */
+    .hero-content h1 {
+        font-size: 2.5em; 
+    }
+    .hero-content p {
+        font-size: 1.2em;
+    }
+
+    .services-grid,
+    .contact-container,
+    .vision-mission-section {
+        grid-template-columns: 1fr; /* عرض عمود واحد لكل الأقسام الشبكية */
+    }
+    
+    /* ... (يمكن إضافة المزيد من التعديلات على باقي الأقسام هنا) ... */
+
+}
+
+/* -----------------------------------------------------------------
+   الشاشات الصغيرة جداً (Very Small Mobile) - العرض أقل من 480 بكسل
+   ----------------------------------------------------------------- */
+@media (max-width: 480px) {
+    
+    body {
+        font-size: 16px;
+    }
+    
+    .cta-button {
+        width: 100%; /* جعل الأزرار تأخذ عرض الشاشة بالكامل */
+        box-sizing: border-box; 
+    }
 }
