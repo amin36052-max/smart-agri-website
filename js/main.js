@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-// ... (الأكواد السابقة هنا: الهامبرغر وبطاقات الخدمات) ...
 
 /* -----------------------------------------------------------------
    3. وظيفة الأكورديون (Accordion for Service Details)
@@ -81,3 +80,92 @@ moreInfoButtons.forEach(button => {
         }
     });
 });
+
+/* -----------------------------------------------------------------
+   4. معالج نموذج الاتصال (Contact Form Handler)
+   ----------------------------------------------------------------- */
+
+const contactForm = document.getElementById('contact-form');
+const formMessage = document.getElementById('form-message');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // جمع بيانات النموذج
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const subject = document.getElementById('subject').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        // التحقق من عدم ترك حقل فارغ
+        if (!name || !email || !subject || !message) {
+            showFormMessage('يرجى ملء جميع الحقول.', 'error');
+            return;
+        }
+
+        // التحقق من صيغة البريد الإلكتروني
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showFormMessage('يرجى إدخال بريد إلكتروني صحيح.', 'error');
+            return;
+        }
+
+        // جمع البيانات في كائن
+        const formData = {
+            name: name,
+            email: email,
+            subject: subject,
+            message: message,
+            timestamp: new Date().toISOString()
+        };
+
+        // إرسال البيانات إلى Formspree (مناسب لاستضافة GitHub Pages)
+        const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xwpzdkpz';
+
+        // نستخدم FormData لإرسال الحقول بالطريقة المتوقعة من Formspree
+        const fd = new FormData();
+        fd.append('name', name);
+        fd.append('email', email);
+        fd.append('subject', subject);
+        fd.append('message', message);
+
+        fetch(FORMSPREE_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: fd
+        })
+            .then(async (response) => {
+                // Formspree يرجع JSON عند النجاح أو الخطأ
+                const data = await response.json().catch(() => ({}));
+                if (response.ok) {
+                    showFormMessage(data.message || 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.', 'success');
+                    contactForm.reset();
+                } else {
+                    console.error('Formspree error:', data);
+                    showFormMessage(data.error || 'حدث خطأ عند إرسال الرسالة. يرجى المحاولة لاحقاً.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('خطأ:', error);
+                showFormMessage('حدث خطأ في الاتصال بخدمة الإرسال. يرجى المحاولة لاحقاً.', 'error');
+            });
+    });
+}
+
+// دالة عرض رسالة النموذج
+function showFormMessage(message, type) {
+    const formMessage = document.getElementById('form-message');
+    if (!formMessage) return;
+
+    formMessage.textContent = message;
+    formMessage.className = `form-message ${type}`;
+    formMessage.style.display = 'block';
+
+    // إخفاء الرسالة بعد 5 ثوان
+    setTimeout(() => {
+        formMessage.style.display = 'none';
+    }, 5000);
+}

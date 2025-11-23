@@ -35,7 +35,7 @@
         <section class="contact-container">
             <div class="contact-form-box">
                 <h2>أرسل رسالة</h2>
-                <form action="process.php" method="POST" class="contact-form">
+                <form id="contact-form" class="contact-form">
 
                     <div class="form-group">
                         <label for="name">الاسم الكامل:</label>
@@ -57,7 +57,8 @@
                         <textarea id="message" name="message" rows="6" required></textarea>
                     </div>
 
-                    <button type="submit" class="cta-button">إرسال الرسالة</button>
+                    <button type="submit" class="cta-button" id="submit-btn">إرسال الرسالة</button>
+                    <div id="form-message" class="form-message" style="display:none;"></div>
                 </form>
             </div>
 

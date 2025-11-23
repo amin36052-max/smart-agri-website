@@ -448,6 +448,42 @@ footer {
     margin-bottom: 15px;
 }
 
+/* -----------------------------------------------------------------
+   تنسيق رسائل النموذج (Form Messages)
+   ----------------------------------------------------------------- */
+.form-message {
+    padding: 12px 15px;
+    margin-top: 15px;
+    border-radius: var(--border-radius-base);
+    text-align: center;
+    font-weight: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+.form-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.form-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .map-placeholder {
     width: 100%;
     height: 200px;
@@ -649,5 +685,96 @@ footer {
         width: 100%;
         /* جعل الأزرار تأخذ عرض الشاشة بالكامل */
         box-sizing: border-box;
+    }
+}
+
+/* -----------------------------------------------------------------
+   تنسيق صفحة المساعد الذكي (AI Assistant)
+   ----------------------------------------------------------------- */
+.ai-assistant-section {
+    padding: 20px;
+    max-width: 900px;
+    /* تحديد عرض مناسب لواجهة الدردشة */
+    margin: 30px auto;
+    background-color: white;
+    border-radius: var(--border-radius-base);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.chat-interface-container {
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius-base);
+    overflow: hidden;
+    margin-top: 20px;
+    height: 500px;
+    /* تحديد ارتفاع ثابت لنافذة الدردشة */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 1. شاشة عرض الرسائل */
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* لتمكين التمرير عند زيادة الرسائل */
+    padding: 15px;
+    background-color: var(--color-background-light);
+}
+
+.message {
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    line-height: 1.5;
+}
+
+/* تنسيق رسائل المستخدم */
+.user-message {
+    background-color: var(--color-accent-blue);
+    color: white;
+    margin-right: 0;
+    margin-left: auto;
+    /* دفع الرسالة لليسار */
+    border-top-left-radius: 2px;
+}
+
+/* تنسيق رسائل النظام/الذكاء الاصطناعي */
+.system-message {
+    background-color: #e0e0e0;
+    color: var(--color-text-dark);
+    margin-left: 0;
+    margin-right: auto;
+    /* دفع الرسالة لليمين */
+    border-top-right-radius: 2px;
+}
+
+/* 2. شريط الإدخال */
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: white;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 10px;
+    font-size: 1em;
+}
+
+#send-button {
+    padding: 10px 20px;
+    /* استخدام تنسيق زر CTA الموجود لديك */
+}
+
+/* استجابة الموبايل */
+@media (max-width: 768px) {
+    .chat-interface-container {
+        height: 400px;
+        /* تقليل الارتفاع في شاشات الموبايل */
     }
 }
