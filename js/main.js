@@ -46,3 +46,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// ... (الأكواد السابقة هنا: الهامبرغر وبطاقات الخدمات) ...
+
+    /* -----------------------------------------------------------------
+       3. وظيفة الأكورديون (Accordion for Service Details)
+       ----------------------------------------------------------------- */
+    
+    const moreInfoButtons = document.querySelectorAll('.more-info-toggle');
+
+    moreInfoButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // الوصول إلى العنصر الأب (البطاقة)
+            const serviceCard = button.closest('.service-card');
+            // تحديد محتوى التفاصيل المخفي داخل البطاقة
+            const details = serviceCard.querySelector('.service-details');
+
+            // تبديل فئة expanded في محتوى التفاصيل
+            details.classList.toggle('expanded');
+            
+            // تبديل فئة active للزر نفسه (لتغيير لونه أو مظهره)
+            button.classList.toggle('active');
+            
+            // تغيير النص من "اكتشف المزيد" إلى "إغلاق" عند الفتح (اختياري)
+            if (details.classList.contains('expanded')) {
+                button.textContent = 'إغلاق التفاصيل';
+            } else {
+                button.textContent = 'اكتشف المزيد';
+            }
+        });
+    });

@@ -335,6 +335,41 @@ footer {
 }
 
 /* -----------------------------------------------------------------
+   تنسيق محتوى الخدمات المنسدل (Accordion)
+   ----------------------------------------------------------------- */
+.service-details {
+    max-height: 0; /* مفتاح إخفاء المحتوى افتراضياً */
+    overflow: hidden; /* لإخفاء أي محتوى يتجاوز الصفر */
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out; 
+    padding: 0 10px; /* حشو داخلي أفقي فقط عندما يكون مغلقاً */
+    margin-top: 10px;
+}
+
+/* حالة الفتح: يتم إضافتها بواسطة JavaScript */
+.service-details.expanded {
+    max-height: 500px; /* قيمة كبيرة بما يكفي لظهور كل المحتوى */
+    padding: 10px; /* حشو عند الفتح */
+}
+
+/* تنسيق زر الاكتشاف */
+.more-info-toggle {
+    background: none;
+    border: none;
+    color: var(--color-secondary-blue); /* لون أزرق جذاب */
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 0 0 0;
+    transition: transform 0.3s ease;
+    display: block; /* لضمان أنه يأخذ سطراً جديداً */
+    margin: 10px auto 0 auto;
+}
+
+/* تغيير شكل الزر عند فتحه (اختياري) */
+.more-info-toggle.active {
+    color: var(--color-primary-green);
+    transform: translateY(5px); /* لإعطاء إحساس بالضغط */
+}
+/* -----------------------------------------------------------------
    9. تنسيق صفحة الاتصال (Contact Page Styling)
    ----------------------------------------------------------------- */
 .contact-page-content {
