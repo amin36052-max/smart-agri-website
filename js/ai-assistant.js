@@ -1,101 +1,155 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // رابط Webhook للشات في n8n (مقدم من المستخدم)
+    const N8N_WEBHOOK_URL = "https://aminmeabed12.app.n8n.cloud/webhook/09457984-80b4-4989-be4a-98e101344f65";
+
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-    // رابط الـ Webhook الخاص بـ n8n (شات)
-    const N8N_WEBHOOK_URL = "https://aminmeabed12.app.n8n.cloud/webhook/b29ae7ed-c2a8-410d-8da0-17ebdfbe8558/chat";
-
-    // دالة إنشاء وإضافة رسالة إلى واجهة الدردشة
-    function appendMessage(text, sender) {
+    // دالة لإضافة الرسائل إلى الواجهة
+    function appendMessage(text, sender, isError = false) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
+        if (isError) {
+            messageDiv.classList.add('error-message');
+        }
         messageDiv.textContent = text;
         chatMessages.appendChild(messageDiv);
 
-        // التمرير التلقائي إلى أسفل النافذة
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatMessages.scrollTop = chatMessages.scrollHeight; // التمرير للأسفل
+        return messageDiv;
     }
 
-    // دالة إرسال الرسالة إلى n8n (محسنة: تعطيل الإدخال أثناء الانتظار، معالجة أخطاء أفضل)
     async function sendMessage() {
         const message = userInput.value.trim();
         if (message === "") return;
 
-        // عرض رسالة المستخدم
+        // 1. عرض رسالة المستخدم وإفراغ الحقل
         appendMessage(message, 'user');
         userInput.value = '';
-
-        // عرض رسالة انتظار
-        appendMessage('...الذكاء الاصطناعي يكتب', 'system');
-        const lastMessage = chatMessages.lastElementChild;
-
-        // تعطيل زر الإرسال وحقل الإدخال لمنع إرسال متعدد
         sendButton.disabled = true;
-        userInput.disabled = true;
+
+        // 2. رسالة انتظار
+        const waitingMessage = appendMessage('...المستشار يكتب', 'system');
 
         try {
-            const payload = { userMessage: message };
-
+            // 3. إرسال الطلب إلى Webhook
             const response = await fetch(N8N_WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
                 },
-                body: JSON.stringify(payload),
+                // 🌟 إرسال الرسالة في مفتاح "userMessage" 🌟
+                body: JSON.stringify({ userMessage: message }),
             });
 
-            if (!response.ok) {
-                // حاول قراءة رسالة الخطأ من الخادم إن أمكن
-                let errText = `حالة: ${response.status}`;
-                try {
-                    const errJson = await response.json();
-                    if (errJson && errJson.message) errText = errJson.message;
-                } catch (e) {
-                    // تجاهل خطأ التحليل
-                }
-                throw new Error('فشل الاتصال بالخادم، ' + errText);
-            }
-
-            // قراءة JSON من الاستجابة
-            let data = {};
+            // سجّل حالةHTTP ورؤوس الاستجابة لمساعدة التصحيح
+            console.log('n8n response status:', response.status);
             try {
-                data = await response.json();
+                console.log('n8n response headers:', Object.fromEntries(response.headers.entries()));
             } catch (e) {
-                throw new Error('الخادم لم يُرجع JSON صالح');
+                console.log('Could not enumerate headers', e);
             }
 
-            // دعم أشكال مختلفة لاستجابة n8n: { aiResponse: '...' } أو { result: { aiResponse: '...' } } أو array
-            let aiResponse = null;
-            if (data.aiResponse) aiResponse = data.aiResponse;
-            else if (data.result && data.result.aiResponse) aiResponse = data.result.aiResponse;
-            else if (Array.isArray(data) && data[0] && data[0].aiResponse) aiResponse = data[0].aiResponse;
-            else if (data[0] && data[0].json && data[0].json.aiResponse) aiResponse = data[0].json.aiResponse;
-            else if (data.message) aiResponse = data.message;
+            // اقرأ النص الخام أولاً — بعض إعدادات n8n قد ترجع نص أو JSON بدون Content-Type مناسب
+            const rawText = await response.text();
+            console.log('n8n raw response text:', rawText);
 
-            if (!aiResponse) aiResponse = 'عذراً، لم أتمكن من الحصول على إجابة من الخادم.';
+            if (!response.ok) {
+                // إذا لم يكن الرد 200، استخدم النص الخام كخطأ
+                throw new Error(`فشل الاتصال بخادم n8n. (status ${response.status}) ${rawText}`);
+            }
 
-            // تحديث رسالة الانتظار بالإجابة الحقيقية
-            lastMessage.textContent = aiResponse;
+            // حاول تحويل النص إلى JSON، وإلا استخدم النص الخام كما هو
+            let data;
+            try {
+                data = rawText ? JSON.parse(rawText) : null;
+            } catch (e) {
+                console.warn('n8n response is not valid JSON; using raw text for extraction');
+                data = rawText;
+            }
+
+            // دالة مساعدة لاستخراج نص الرد من أشكال JSON مختلفة قد يرجعها n8n
+            function extractAIResponse(obj) {
+                if (obj == null) return null;
+                if (typeof obj === 'string') {
+                    const t = obj.trim();
+                    return t.length ? t : null;
+                }
+                if (Array.isArray(obj)) {
+                    for (const item of obj) {
+                        const r = extractAIResponse(item);
+                        if (r) return r;
+                    }
+                    return null;
+                }
+                if (typeof obj === 'object') {
+                    // فحص مفاتيح شائعة
+                    const keys = ['aiResponse', 'response', 'answer', 'output', 'text', 'message', 'result', 'reply'];
+                    for (const k of keys) {
+                        if (k in obj && obj[k] != null) {
+                            const r = extractAIResponse(obj[k]);
+                            if (r) return r;
+                        }
+                    }
+
+                    // OpenAI style: choices[0].message.content أو choices[0].text
+                    if (obj.choices && Array.isArray(obj.choices) && obj.choices.length > 0) {
+                        const choice = obj.choices[0];
+                        if (choice.message && choice.message.content) return String(choice.message.content).trim();
+                        if (choice.text) return String(choice.text).trim();
+                    }
+
+                    // بعض نودات n8n تُرجع المحتوى داخل .json أو .body
+                    if ('json' in obj && obj.json != null) {
+                        const r = extractAIResponse(obj.json);
+                        if (r) return r;
+                    }
+                    if ('body' in obj && obj.body != null) {
+                        const r = extractAIResponse(obj.body);
+                        if (r) return r;
+                    }
+
+                    // أخيراً فحص جميع القيم
+                    for (const k in obj) {
+                        if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+                        const r = extractAIResponse(obj[k]);
+                        if (r) return r;
+                    }
+                }
+                return null;
+            }
+
+            let aiResponse = extractAIResponse(data) || null;
+
+            // إذا كانت الاستجابة تحتوي على قوالب n8n غير مُفسرة (مثلاً "{{ $node... }}")، نعرض رسالة إرشادية
+            if (aiResponse && (/\{\{.*\}\}/.test(aiResponse) || aiResponse.includes('$node'))) {
+                console.warn('Received template-like aiResponse from n8n (not evaluated):', aiResponse, data);
+                waitingMessage.textContent = 'لم يتم تفسير استجابة n8n؛ يرجى تعديل الـ Workflow لإرجاع نص الإجابة. تحقق تعليمات الدعم في لوحة التحكم.';
+                // ضع الاستجابة الكاملة في الكونسول لمساعدتك في التصحيح
+                console.log('Full n8n response object:', data);
+            } else {
+                // تأكد من استخدام المتغير الصحيح. استخدم aiResponse (الذي استخرجناه أعلاه)
+                aiResponse = aiResponse || 'عذراً، لم يتم العثور على إجابة.';
+                waitingMessage.textContent = aiResponse; // تحديث رسالة الانتظار
+            }
 
         } catch (error) {
-            console.error('Error sending message:', error);
-            lastMessage.textContent = `حدث خطأ: ${error.message}`;
-            lastMessage.classList.remove('system-message');
-            lastMessage.classList.add('error-message');
+            console.error("Error sending message:", error);
+            waitingMessage.textContent = `حدث ${error.message}`;
+            waitingMessage.classList.remove('system-message');
+            waitingMessage.classList.add('error-message');
+
         } finally {
-            // إعادة تفعيل الإدخال
             sendButton.disabled = false;
-            userInput.disabled = false;
-            userInput.focus();
         }
     }
 
-    // ربط النقر بزر الإرسال والضغط على مفتاح Enter
+    // ربط الأحداث
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !sendButton.disabled) {
             sendMessage();
         }
     });
