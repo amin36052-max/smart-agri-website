@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - SMART AGRI</title>
+    
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/dashboard.css"> 
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    
+    <header class="main-header">
+        <div class="logo">SMART AGRI / اسم شركتك</div>
+        <button class="menu-toggle" aria-controls="main-nav" aria-expanded="false">
+            <span class="hamburger-icon"></span>
+        </button>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="services.html">خدماتنا</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="dashboard.html" class="active">لوحة التحكم</a></li>
+                <li><a href="ai-assistant.html">المساعد الذكي</a></li> 
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        
+        <section class="location-input-section">
+            <h2><i class="fas fa-satellite"></i> تحليل بيانات الأقمار الصناعية</h2>
+            <p>الرجاء إدخال إحداثيات الموقع (Lat/Lon) لبدء تحليل صحة المحصول (NDVI).</p>
+            <div class="input-group">
+                <input type="text" id="lat-input" placeholder="خط العرض (Latitude)" dir="ltr" required>
+                <input type="text" id="lon-input" placeholder="خط الطول (Longitude)" dir="ltr" required>
+                <button id="fetch-data-button" class="cta-button"><i class="fas fa-search"></i> تحليل الموقع</button>
+            </div>
+            <div id="location-status" class="status-message">الرجاء إدخال الإحداثيات للتحميل.</div>
+        </section>
+        
+        <div id="dashboard-content" style="display:none;">
+            <h1 class="section-title"><i class="fas fa-chart-line"></i> نظرة عامة على المزرعة الذكية</h1>
+
+            <div class="kpi-grid">
+                <div class="kpi-card status-ok">
+                    <i class="fas fa-seedling"></i>
+                    <h3>صحة المحصول (NDVI)</h3>
+                    <p class="value" id="kpi-health">--</p>
+                    <span class="status-indicator">البيانات الحالية</span>
+                </div>
+
+                <div class="kpi-card status-warning">
+                    <i class="fas fa-tint"></i>
+                    <h3>الرطوبة المقدرة</h3>
+                    <p class="value" id="kpi-moisture">--</p>
+                    <span class="status-indicator">بيانات تقريبية</span>
+                </div>
+                
+                <div class="kpi-card">
+                    <i class="fas fa-cloud-sun"></i>
+                    <h3>التنبؤ الجوي</h3>
+                    <p class="value" id="kpi-weather">--</p>
+                    <span class="status-indicator">بيانات محاكاة</span>
+                </div>
+                
+                <div class="kpi-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>الموقع الحالي</h3>
+                    <p class="value" id="kpi-location">--</p>
+                    <span class="status-indicator">الإحداثيات المُدخلة</span>
+                </div>
+            </div>
+            
+            <div class="monitoring-grid">
+                
+                <div class="chart-card">
+                    <h2>مؤشر صحة المحصول (NDVI) لآخر 6 أسابيع</h2>
+                    <canvas id="ndviChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h2>تقدير الرطوبة الأسبوعي</h2>
+                    <canvas id="soilMoistureChart"></canvas>
+                </div>
+
+                <div class="info-card alerts">
+                    <h2><i class="fas fa-exclamation-triangle"></i> التنبيهات الأخيرة</h2>
+                    <ul id="alert-list">
+                        <li>جارٍ تحليل التنبيهات...</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card irrigation-status">
+                    <h2>إجراء مقترح</h2>
+                    <div class="status-detail">
+                        <p id="suggested-action">يتم تحليل البيانات لتحديد الإجراء المناسب.</p>
+                        <p>تاريخ آخر تحليل: <strong id="last-analysis">--</strong></p>
+                        <button class="cta-button status-toggle"><i class="fas fa-info-circle"></i> عرض التقرير المفصل</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SMART AGRI. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script> 
+</body>
+</html>
