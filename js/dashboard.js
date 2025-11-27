@@ -15,7 +15,7 @@
 const OPEN_WEATHER_API_KEY = 'df8e2b56de4d8b8b1581140a18fcc7';
 // العنوان (URL) الخاص بالخادم الوسيط الذي سيقوم بتشغيل أكواد GEE
 const GEE_BACKEND_URL = 'https://green-mind-six.vercel.app/api/gee-analysis/'; 
-
+console.log('OpenWeather Key Loaded:', OPEN_WEATHER_API_KEY)
 // العناصر الأساسية في الصفحة
 const geojsonInput = document.getElementById('geojson-input');
 const fetchDataButton = document.getElementById('fetch-data-button');
@@ -154,14 +154,34 @@ function updateStatus(message, type = 'info') {
 
 // 6.2 استخلاص الإحداثيات المركزية (لتبسيط الأمر، نأخذ نقطة عشوائية من الـ GeoJSON)
 function extractCenterCoordinates(geojsonData) {
-    // وظيفة بسيطة جداً: استخراج أول إحداثي كنقطة مركزية لـ OpenWeather
     try {
-        // نصل إلى أول نقطة في أول حلقة من أول مضلع
-        const coordinates = geojsonData.geometry.coordinates[0][0]; 
-        // GeoJSON هو [lon, lat]. نحن نحتاج {lat: ..., lon: ...}
+        let geometry;
+
+        // 1. تحديد الهندسة (Geometry)
+        if (geojsonData.type === 'FeatureCollection' && geojsonData.features.length > 0) {
+            // إذا كان FeatureCollection، نأخذ أول ميزة (Feature)
+            geometry = geojsonData.features[0].geometry;
+        } else if (geojsonData.type === 'Feature') {
+            // إذا كان Feature، نأخذ الهندسة مباشرة
+            geometry = geojsonData.geometry;
+        } else {
+            return null; // لا يوجد Feature أو FeatureCollection صالح
+        }
+
+        // 2. التحقق من نوع الهندسة (يجب أن يكون Polygon)
+        if (geometry.type !== 'Polygon') {
+            throw new Error("نوع الهندسة يجب أن يكون 'Polygon' لاستخلاص المركز.");
+        }
+
+        // 3. استخلاص أول نقطة (النقطة المركزية التقريبية)
+        // المسار: coordinates[الحلقة الخارجية][أول نقطة]
+        const coordinates = geometry.coordinates[0][0]; 
+        
+        // GeoJSON يستخدم الترتيب [lon, lat]
+        // يجب أن نرجع {lat, lon}
         return { lat: coordinates[1], lon: coordinates[0] }; 
     } catch (e) {
-        console.error("فشل في استخلاص الإحداثيات:", e);
+        console.error("خطأ في استخلاص الإحداثيات المركزية:", e.message);
         return null;
     }
 }
