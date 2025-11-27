@@ -14,7 +14,7 @@
 // (هذه المتغيرات يجب استبدالها بمفاتيحك الحقيقية لاحقاً)
 const OPEN_WEATHER_API_KEY = 'df8e2b56de4d8b8b1581140a18fcc7';
 // العنوان (URL) الخاص بالخادم الوسيط الذي سيقوم بتشغيل أكواد GEE
-const GEE_BACKEND_URL = 'https://whimsical-frangollo-fba479.netlify.app/.netlify/functions/gee_analysis'; 
+const GEE_BACKEND_URL = 'https://whimsical-frangollo-fba479.netlify.app/.netlify/Functions/gee_analysis'; 
 console.log('OpenWeather Key Loaded:', OPEN_WEATHER_API_KEY)
 // العناصر الأساسية في الصفحة
 const geojsonInput = document.getElementById('geojson-input');
