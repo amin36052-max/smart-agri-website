@@ -1,4 +1,0 @@
-# netlify/functions/gee_analysis/requirements.txt
-
-earthengine-api
-numpy
