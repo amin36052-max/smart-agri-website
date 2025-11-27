@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/api/gee-analysis",
-      "dest": "api/gee-analysis.py"
+      "dest": "/api/gee-analysis.py"
     }
   ]
 }
