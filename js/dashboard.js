@@ -1,252 +1,270 @@
+/**
+ * ========================================================================
+ * js/dashboard.js - وظائف لوحة التحكم الرئيسية (SMART AGRI)
+ * * المهام:
+ * 1. معالجة إدخال GeoJSON والتحقق من صحته.
+ * 2. إخفاء/إظهار لوحة التحكم.
+ * 3. استدعاء API GEE للحصول على بيانات NDVI والمحتوى المائي.
+ * 4. استدعاء OpenWeatherMap للحصول على توقعات الطقس.
+ * 5. رسم البيانات باستخدام Chart.js.
+ * ========================================================================
+ */
+
+// 1. المتغيرات العامة (Global Variables)
+// (هذه المتغيرات يجب استبدالها بمفاتيحك الحقيقية لاحقاً)
+const OPEN_WEATHER_API_KEY = 'df0e2b56de4d0d5b15811140a100fcc7'; 
+// العنوان (URL) الخاص بالخادم الوسيط الذي سيقوم بتشغيل أكواد GEE
+const GEE_BACKEND_URL = 'https://green-mind-six.vercel.app/api/gee-analysis/'; 
+
+// العناصر الأساسية في الصفحة
+const geojsonInput = document.getElementById('geojson-input');
+const fetchDataButton = document.getElementById('fetch-data-button');
+const locationStatus = document.getElementById('location-status');
+const dashboardContent = document.getElementById('dashboard-content');
+const geojsonSection = document.querySelector('.geojson-input-section');
+
+// متغيرات الرسوم البيانية (سيتم تهيئتها لاحقاً)
+let ndviChartInstance = null;
+let waterChartInstance = null;
+
+
+// 2. الدالة الرئيسية للبدء (Event Listeners)
 document.addEventListener('DOMContentLoaded', () => {
+    // تعطيل الزر في البداية
+    fetchDataButton.disabled = true;
+    updateStatus('الرجاء إدخال بيانات GeoJSON ثم اضغط "تحليل ورصد الموقع".', 'info');
+
+    // مراقبة تغيير الـ textarea للتحقق من صحة GeoJSON
+    geojsonInput.addEventListener('input', checkGeoJsonValidity);
     
-    // ==========================================================
-    // ⚠ نقطة نهاية الخادم الوسيط (Backend) ⚠
-    // يجب تغيير هذا الرابط إلى رابط الإنتاج الخاص بك (مثلاً: https://api.yourdomain.com/...)
-    // ==========================================================
-    const BACKEND_API_ENDPOINT = "http://127.0.0.1:5000/api/get_agri_data"; 
-    
-    // ==========================================================
-    // مراجع عناصر الـ HTML
-    // ==========================================================
-    const latInput = document.getElementById('lat-input');
-    const lonInput = document.getElementById('lon-input');
-    const polygonInput = document.getElementById('polygon-input'); // حقل البوليجون الجديد
-    const fetchDataButton = document.getElementById('fetch-data-button');
-    const dashboardContent = document.getElementById('dashboard-content');
-    const locationStatus = document.getElementById('location-status');
-
-    // مراجع KPIs
-    const kpiHealth = document.getElementById('kpi-health');
-    const kpiMoisture = document.getElementById('kpi-moisture');
-    const kpiWeather = document.getElementById('kpi-weather');
-    const kpiLocation = document.getElementById('kpi-location');
-    const alertList = document.getElementById('alert-list');
-    const suggestedAction = document.getElementById('suggested-action');
-    const lastAnalysis = document.getElementById('last-analysis');
+    // مراقبة النقر على زر التحليل
+    fetchDataButton.addEventListener('click', startAnalysis);
+});
 
 
-    let ndviChartInstance = null;
-    let moistureChartInstance = null;
-    let currentInterval = null;
-
-
-    // -----------------------------------------------------------------
-    // 1. دالة توليد بيانات المحاكاة (كاحتياطي)
-    // -----------------------------------------------------------------
-    // ملاحظة: هذه الدالة يتم استدعاؤها في الـ Frontend في حالة فشل الاتصال بالخادم الوسيط نفسه
-    // أما في حالة فشل Sentinel Hub API، فإن الـ Backend (app.py) هو من يرسل بيانات محاكاة.
-    function generateMockData() {
-        const ndviData = Array.from({ length: 6 }, () => (Math.random() * (0.85 - 0.40) + 0.40).toFixed(4)); 
-        const latestNDVI = parseFloat(ndviData[ndviData.length - 1]);
-        const moistureData = Array.from({ length: 6 }, () => Math.floor(Math.random() * (70 - 30) + 30));
-        const latestMoisture = moistureData[moistureData.length - 1];
-        
-        const alerts = [];
-        if (latestNDVI < 0.5) {
-            alerts.push(`**تنبيه NDVI حرج (محاكاة):** انخفاض صحة المحصول (${latestNDVI}). يرجى فحص التسميد.`);
-        }
-        
-        return {
-            ndvi_values: ndviData,
-            latest_ndvi: latestNDVI.toFixed(4),
-            moisture_estimate: latestMoisture,
-            weatherForecast: "صافٍ (محاكاة)",
-            alerts: alerts.length > 0 ? alerts : ["لا توجد تنبيهات تستدعي القلق."],
-            action: "استمر في جدول الري والتسميد الحالي (بيانات محاكاة).",
-            analysis_timestamp: new Date().toLocaleTimeString('ar-EG'),
-            is_mock: true
-        };
-    }
-
-
-    // -----------------------------------------------------------------
-    // 2. دالة جلب البيانات من الخادم الوسيط (Backend)
-    // -----------------------------------------------------------------
-    async function fetchRealDataFromBackend(lat, lon, polygon) {
-        
-        // بناء الطلب لإرسال الإحداثيات والـ Polygon
-        const params = new URLSearchParams({
-            lat: lat || '', 
-            lon: lon || '',
-            polygon: polygon || '' 
-        });
-        
-        const requestUrl = `${BACKEND_API_ENDPOINT}?${params.toString()}`;
-
-        try {
-            const response = await fetch(requestUrl);
-            
-            if (!response.ok) {
-                // إذا فشل الاتصال بالخادم الوسيط نفسه (مثلاً 404 أو 500)
-                throw new Error(`خطأ في الخادم الوسيط (HTTP ${response.status})`);
-            }
-
-            const backendData = await response.json();
-            
-            // تحقق من وجود خطأ في البيانات المُرسلة من الخادم (مثل خطأ API)
-            if (backendData.error) {
-                console.error("خطأ من الخادم:", backendData.error);
-                locationStatus.textContent = `فشل التحليل: ${backendData.error}`;
-                locationStatus.style.color = 'red';
-                // إظهار المحتوى السابق أو إظهار رسالة خطأ
-                return generateMockData();
-            }
-            
-            // تحويل استجابة الخادم البسيطة إلى هيكل جاهز للتحديث
-            return {
-                ndvi_values: backendData.ndvi_values || [],
-                latest_ndvi: backendData.latest_ndvi || '0.0000',
-                moisture_estimate: backendData.moisture_estimate || 0,
-                weatherForecast: backendData.weatherForecast || "صافٍ (تقدير)",
-                alerts: [backendData.message], // نستخدم رسالة الحالة كجزء من التنبيهات
-                action: (parseFloat(backendData.latest_ndvi) < 0.65) ? "يُوصى بإجراء فحص ميداني ومتابعة الري." : "استمر في جدولك المعتاد.",
-                analysis_timestamp: backendData.analysis_timestamp,
-                is_mock: backendData.is_mock || false
-            };
-            
-        } catch (error) {
-            console.error("فشل الاتصال بالخادم الوسيط (CORS/Network):", error);
-            // العودة لبيانات المحاكاة في حالة فشل الشبكة أو الـ CORS
-            locationStatus.textContent = "خطأ في الاتصال بالخادم (تأكد من تشغيل app.py).";
-            locationStatus.style.color = 'red';
-            return generateMockData();
-        }
-    }
-
-    // -----------------------------------------------------------------
-    // 3. دالة تحديث الإحصائيات الرئيسية والرسوم البيانية
-    // -----------------------------------------------------------------
-    function updateDashboard(data) {
-        
-        // تحديث شريط الإحصائيات (KPIs)
-        kpiHealth.textContent = data.latest_ndvi;
-        kpiMoisture.textContent = `${data.moisture_estimate}%`;
-        kpiWeather.textContent = data.weatherForecast;
-        lastAnalysis.textContent = data.analysis_timestamp;
-        suggestedAction.textContent = data.action;
-
-        // تحديث حالة البطاقة بناءً على NDVI
-        const latestNDVIValue = parseFloat(data.latest_ndvi);
-        const kpiHealthCard = kpiHealth.closest('.kpi-card');
-        if (kpiHealthCard) {
-            kpiHealthCard.className = `kpi-card ${latestNDVIValue < 0.5 ? 'status-danger' : (latestNDVIValue < 0.7) ? 'status-warning' : 'status-ok'}`;
-        }
-
-        // تحديث التنبيهات
-        updateAlerts(data.alerts, data.is_mock);
-        
-        // التأكد من أن البيانات رقمية قبل الرسم
-        const ndviDataNumbers = data.ndvi_values.map(v => parseFloat(v));
-        const moistureDataNumbers = [/* قائمة رطوبة 6 قيم */ 40, 45, 48, 46, 50, data.moisture_estimate];
-
-        renderNDVIChart(ndviDataNumbers);
-        renderMoistureChart(moistureDataNumbers);
+// 3. دالة التحقق من صحة GeoJSON
+function checkGeoJsonValidity() {
+    const geojsonString = geojsonInput.value.trim();
+    if (!geojsonString) {
+        fetchDataButton.disabled = true;
+        updateStatus('يجب إدخال بيانات GeoJSON.', 'error');
+        return;
     }
     
-    // ... (باقي دوال المساعدة: updateAlerts, renderNDVIChart, renderMoistureChart) ...
-    function updateAlerts(alerts, isMock) {
-        alertList.innerHTML = '';
-        if (isMock) {
-            alerts.unshift('<li>*تنبيه:* يتم استخدام بيانات محاكاة.</li>');
+    try {
+        const geojsonData = JSON.parse(geojsonString);
+        // تحقق مبدئي من شكل GeoJSON (يجب أن يكون Feature أو FeatureCollection)
+        if (geojsonData.type && (geojsonData.type === 'Feature' || geojsonData.type === 'FeatureCollection')) {
+            fetchDataButton.disabled = false;
+            updateStatus('تم التحقق من GeoJSON بنجاح.', 'success');
+        } else {
+            throw new Error('الكائن ليس GeoJSON صالحاً (يجب أن يكون Feature أو FeatureCollection).');
         }
-        alerts.forEach(alertText => {
-            const li = document.createElement('li');
-            li.innerHTML = alertText;
-            alertList.appendChild(li);
-        });
+    } catch (e) {
+        fetchDataButton.disabled = true;
+        updateStatus('خطأ: بيانات GeoJSON غير صالحة أو التنسيق غير سليم.', 'error');
     }
+}
 
-    function renderNDVIChart(ndviData) {
-        const ctx = document.getElementById('ndviChart').getContext('2d');
-        const labels = ['أ-6', 'أ-5', 'أ-4', 'أ-3', 'أ-2', 'أ-1']; 
 
-        if (ndviChartInstance) { ndviChartInstance.destroy(); }
+// 4. دالة بدء التحليل (عند الضغط على الزر)
+async function startAnalysis() {
+    // إخفاء الـ GeoJSON وإظهار لوحة التحكم
+    geojsonSection.style.display = 'none';
+    dashboardContent.style.display = 'block';
+    updateStatus('جارٍ سحب وتحليل البيانات من الأقمار الصناعية ومن OpenWeather...', 'loading');
+
+    const geojsonString = geojsonInput.value.trim();
+    const geojsonData = JSON.parse(geojsonString);
+
+    // استخلاص الإحداثيات المركزية للطقس (سنستخدمها للـ OpenWeather)
+    const centerCoords = extractCenterCoordinates(geojsonData);
+
+    try {
+        // تشغيل المهام بالتوازي لتقليل وقت الانتظار
+        const [geeResult, weatherResult] = await Promise.all([
+            fetchGeeData(geojsonData),
+            fetchOpenWeather(centerCoords)
+        ]);
+
+        // 1. تحديث بيانات GEE ورسم المنحنيات
+        updateKpisAndCharts(geeResult);
+
+        // 2. تحديث بيانات الطقس والتوصيات
+        updateWeatherAndRecommendations(weatherResult);
+
+        updateStatus('اكتمل التحليل بنجاح.', 'success');
         
-        ndviChartInstance = new Chart(ctx, {
-            type: 'line', data: { labels: labels, datasets: [{
-                label: 'NDVI (مؤشر صحة المحصول)', data: ndviData, 
-                borderColor: 'rgb(56, 142, 60)', backgroundColor: 'rgba(56, 142, 60, 0.1)',
-                tension: 0.4, fill: true,
-            }]},
-            options: { scales: { y: { min: 0.3, max: 0.9, title: { display: true, text: 'قيمة NDVI' }}}}
-        });
-    }
-
-    function renderMoistureChart(moistureData) {
-        const ctx = document.getElementById('soilMoistureChart').getContext('2d');
-        const labels = ['أ-6', 'أ-5', 'أ-4', 'أ-3', 'أ-2', 'أ-1']; 
-
-        if (moistureChartInstance) { moistureChartInstance.destroy(); }
-        
-        moistureChartInstance = new Chart(ctx, {
-            type: 'bar', data: { labels: labels, datasets: [{
-                label: 'الرطوبة المقدرة (%)',
-                data: moistureData, backgroundColor: 'rgba(66, 165, 245, 0.7)',
-            }]},
-            options: { scales: { y: { min: 20, max: 80, title: { display: true, text: 'الرطوبة (%)' }}}}
-        });
-    }
-
-
-    // -----------------------------------------------------------------
-    // 4. دالة الجلب والبدء بالتحديث الدوري
-    // -----------------------------------------------------------------
-    async function fetchAndStartUpdate(lat, lon, polygon) {
-        
-        // إيقاف التحديث الدوري السابق
-        if (currentInterval) {
-            clearInterval(currentInterval);
-        }
-        
-        // إظهار حالة التحميل
-        locationStatus.textContent = "جاري تحليل المنطقة...";
-        locationStatus.style.color = 'blue';
+    } catch (error) {
+        // في حال حدوث خطأ، نعرض رسالة خطأ ونعيد إظهار قسم الإدخال
+        console.error("خطأ في التحليل:", error);
+        updateStatus(`فشل التحليل: ${error.message}`, 'error');
+        geojsonSection.style.display = 'block';
         dashboardContent.style.display = 'none';
-
-        // جلب أول دفعة من البيانات
-        const data = await fetchRealDataFromBackend(lat, lon, polygon); 
-
-        // إظهار لوحة التحكم وتحديثها بالبيانات الجديدة
-        dashboardContent.style.display = 'block';
-        kpiLocation.textContent = polygon ? 'البوليجون المُدخل' : `${lat}, ${lon}`;
-        updateDashboard(data); 
-
-        locationStatus.textContent = data.is_mock ? 'تم تحميل البيانات (باستخدام محاكاة).' : `${data.message}`;
-        locationStatus.style.color = data.is_mock ? 'orange' : 'green';
-        
-        // بدء التحديث الدوري كل 5 دقائق
-        currentInterval = setInterval(async () => {
-            const newData = await fetchRealDataFromBackend(lat, lon, polygon);
-            updateDashboard(newData);
-        }, 300000); 
     }
+}
 
 
-    // -----------------------------------------------------------------
-    // 5. منطق النقر على الزر (المدخلات)
-    // -----------------------------------------------------------------
-    fetchDataButton.addEventListener('click', () => {
-        const lat = latInput.value.trim();
-        const lon = lonInput.value.trim();
-        const polygon = polygonInput.value.trim();
+// 5. دوال جلب البيانات (يجب عليك إنشاء هذه الدوال على الخادم)
 
-        if (lat === "" && lon === "" && polygon === "") {
-            locationStatus.textContent = "الرجاء إدخال إحداثيات أو بوليجون صالح.";
-            locationStatus.style.color = 'red';
-            return;
-        }
-        
-        // التحقق من أن المستخدم لم يدخل نصاً غير رقمي في الإحداثيات الأساسية
-        if ((lat && isNaN(lat)) || (lon && isNaN(lon))) {
-             locationStatus.textContent = "الرجاء إدخال إحداثيات رقمية صالحة.";
-             locationStatus.style.color = 'red';
-             return;
-        }
-
-        // إطلاق عملية الجلب
-        fetchAndStartUpdate(lat, lon, polygon);
+// 5.1 جلب بيانات GEE (NDVI والمحتوى المائي)
+async function fetchGeeData(geojsonData) {
+    // هذه الدالة تتطلب خادم وسيط (مثل Node.js أو PHP) لتنفيذ كود GEE
+    const response = await fetch(GEE_BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ geojson: geojsonData, type: 'gee_analysis' })
     });
 
-    latInput.focus(); 
-});
+    if (!response.ok) {
+        throw new Error(`فشل الاتصال بخادم GEE الوسيط: ${response.statusText}`);
+    }
+    return response.json();
+}
+
+// 5.2 جلب بيانات OpenWeather
+async function fetchOpenWeather(coords) {
+    if (!OPEN_WEATHER_API_KEY || !coords) {
+         // نلقي خطأ لعدم وجود مفتاح
+         throw new Error('مفتاح OpenWeather API غير موجود.');
+    }
+    
+    const lat = coords.lat;
+    const lon = coords.lon;
+    
+    // One Call API 3.0: نجلب التوقعات اليومية لمدة 7 أيام
+    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&appid=${OPEN_WEATHER_API_KEY}&units=metric&lang=ar`;
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+        throw new Error(`فشل جلب بيانات الطقس: ${response.statusText}`);
+    }
+    return response.json();
+}
+
+
+// 6. دوال مساعدة (Helper Functions)
+
+// 6.1 تحديث حالة الإدخال
+function updateStatus(message, type = 'info') {
+    locationStatus.textContent = message;
+    locationStatus.className = `status-message ${type}`; // info, success, error, loading
+}
+
+// 6.2 استخلاص الإحداثيات المركزية (لتبسيط الأمر، نأخذ نقطة عشوائية من الـ GeoJSON)
+function extractCenterCoordinates(geojsonData) {
+    // وظيفة بسيطة جداً: استخراج أول إحداثي كنقطة مركزية لـ OpenWeather
+    try {
+        // نصل إلى أول نقطة في أول حلقة من أول مضلع
+        const coordinates = geojsonData.geometry.coordinates[0][0]; 
+        // GeoJSON هو [lon, lat]. نحن نحتاج {lat: ..., lon: ...}
+        return { lat: coordinates[1], lon: coordinates[0] }; 
+    } catch (e) {
+        console.error("فشل في استخلاص الإحداثيات:", e);
+        return null;
+    }
+}
+
+// 6.3 تحديث مؤشرات الأداء الرئيسية والرسوم البيانية (KPIs & Charts)
+function updateKpisAndCharts(geeData) {
+    
+    // مثال على تحديث KPI (يجب أن يتم تعديل هذه الوظيفة بناءً على شكل بيانات GEE المرتجعة)
+    const latestData = geeData.results.slice(-1)[0]; // آخر قراءة
+
+    document.getElementById('kpi-health').textContent = (latestData.ndvi_mean * 100).toFixed(1) + '%';
+    document.getElementById('kpi-water').textContent = (latestData.water_mean * 100).toFixed(1) + '%';
+    document.getElementById('kpi-location').textContent = 'تم التحليل';
+
+    // 6.4 رسم البيانات (NDVI و Water)
+    // استدعاء دالة الرسم
+    drawCharts(geeData.results);
+}
+
+
+// 6.5 تحديث بيانات الطقس والتوصيات
+function updateWeatherAndRecommendations(weatherData) {
+    // مثال على تحديث KPI الطقس اليومي
+    const today = weatherData.daily[0];
+
+    document.getElementById('kpi-weather-temp').textContent = `${today.temp.day.toFixed(0)}°C`;
+
+    // مثال على إضافة توصية ري بسيطة بناءً على الطقس
+    let recommendation = 'الوضع مستقر. استمر في جدول الري المعتاد.';
+    if (today.temp.day > 35) {
+        recommendation = '⚠️ توقعات بحرارة عالية! يوصى بزيادة طفيفة في الري أو التظليل.';
+    } else if (today.rain > 5) {
+        recommendation = '🌧️ توقعات بأمطار غزيرة. يوصى بإيقاف الري ليوم أو يومين.';
+    }
+    
+    document.getElementById('suggested-action').textContent = recommendation;
+    document.getElementById('last-analysis').textContent = new Date().toLocaleDateString('ar-EG');
+    
+    // يمكنك إضافة المزيد من المنطق والتوصيات هنا
+}
+
+
+// 6.6 دالة رسم الرسوم البيانية (Chart.js)
+function drawCharts(data) {
+    const dates = data.map(item => item.date);
+    const ndviValues = data.map(item => item.ndvi_mean);
+    const waterValues = data.map(item => item.water_mean);
+    
+    // تدمير النسخ القديمة لتجنب تكرار الرسوم
+    if (ndviChartInstance) ndviChartInstance.destroy();
+    if (waterChartInstance) waterChartInstance.destroy();
+
+    // رسم منحنى NDVI
+    ndviChartInstance = new Chart(
+        document.getElementById('ndviChart'),
+        {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'متوسط NDVI الأسبوعي',
+                    data: ndviValues,
+                    borderColor: 'rgb(56, 118, 29)', // لون أخضر أساسي
+                    tension: 0.1,
+                    fill: false
+                }]
+            },
+            options: { 
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: false, title: { display: true, text: 'NDVI' } }
+                }
+            }
+        }
+    );
+    
+    // رسم منحنى المحتوى المائي
+    waterChartInstance = new Chart(
+        document.getElementById('waterContentChart'),
+        {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'المحتوى المائي (NDWI) الأسبوعي',
+                    data: waterValues,
+                    borderColor: 'rgb(74, 134, 232)', // لون أزرق
+                    tension: 0.1,
+                    fill: false
+                }]
+            },
+            options: { 
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: false, title: { display: true, text: 'NDWI' } }
+                }
+            }
+        }
+    );
+}
