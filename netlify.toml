@@ -1,0 +1,11 @@
+[build]
+  # مكان ملفات الواجهة الأمامية (غالباً هو الجذر)
+  publish = "." 
+
+[functions]
+  # تحديد مسار الدوال (مهم جداً!)
+  directory = "netlify/functions"
+  # تحديد بيئة التشغيل لـ Python
+  # Netlify تستخدم Goja لـ Node.js، لكنها تدعم Python
+  # يجب تحديد لغة Python في الإعدادات لاحقاً
+  node_bundler = "esbuild"

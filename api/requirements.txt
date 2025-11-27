@@ -1,7 +1,0 @@
-# api/requirements.txt
-
-# المكتبة الرئيسية للوصول إلى Google Earth Engine Python API
-earthengine-api
-
-# مكتبة numpy: مطلوبة لمعالجة المصفوفات والأرقام الكبيرة، وتستخدمها GEE بشكل غير مباشر
-numpy
