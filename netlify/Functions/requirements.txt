@@ -1,4 +1,0 @@
-# netlify/functions/requirements.txt
-
-earthengine-api
-numpy

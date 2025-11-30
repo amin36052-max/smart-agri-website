@@ -8,234 +8,303 @@
     margin: 20px auto;
 }
 
-/* تنسيق قسم إدخال الموقع */
+/* إعدادات الحركة (Animation) على العناصر التفاعلية */
+.kpi-card,
+.chart-card,
+.info-card,
+.cta-button,
+.manual-data-input input {
+    transition: all 0.3s ease-in-out;
+}
+
+/* تأثير التوقف (Hover) على البطاقات (لراحة المستخدم) */
+.kpi-card:hover,
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* تنسيق قسم إدخال الموقع والبيانات اليدوية */
 .location-input-section {
-    /* استخدام متغيرات الألوان لزيادة التناسق */
-    background-color: var(--color-background-light, #e8f5e9); 
-    border: 1px solid var(--color-light-green, #c8e6c9);
+    background-color: white;
+    border: 1px solid #ddd;
     padding: 25px;
-    border-radius: var(--border-radius-base, 8px);
+    border-radius: 8px;
     margin-bottom: 30px;
-    text-align: center;
+    text-align: right;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .location-input-section h2 {
-    color: var(--color-primary-green, #388e3c);
-    margin-bottom: 15px;
-}
-
-/* تنسيق الجملة الترحيبية/التوجيهية الجديدة */
-.contact-prompt {
-    font-size: 1.2em;
-    color: var(--color-accent-blue, #4a86e8);
+    color: #388e3c;
     margin-bottom: 20px;
-    font-weight: 500;
+    text-align: center;
 }
 
-/* تعديل تخطيط مجموعة الإدخال ليدعم الـ textarea */
-.location-input-section .input-group {
-    display: block; /* التغيير هنا: عرض عمودي للمكونات */
-    width: 100%;
-    margin-top: 15px;
-    text-align: right;
+.input-grid {
+    display: grid;
+    /* 5 حقول إدخال + حاوية واحدة للأزرار */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.location-input-section .input-group label {
-    display: block;
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
     font-weight: bold;
-    margin-bottom: 8px;
-    color: var(--color-text-dark, #333);
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 0.9em;
 }
 
-/* تنسيق الـ TEXTAREA الجديد */
-.location-input-section textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px;
+.manual-data-input input,
+.manual-data-input button {
+    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: var(--border-radius-base, 5px);
-    font-size: 14px;
-    font-family: monospace; /* استخدام خط Monospace لسهولة قراءة JSON */
-    resize: vertical;
-    transition: border-color 0.3s;
-    box-sizing: border-box; /* لضمان عدم خروجها عن حدود الحاوية */
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
-.location-input-section textarea:focus {
-    border-color: var(--color-accent-blue, #4a86e8);
-    outline: none;
+/* تنسيق حاوية الأزرار لتصبح أفقية وتتوضع في الشبكة */
+.buttons-container.horizontal-buttons {
+    grid-column: span 1;
+    /* تأخذ مساحة عمود واحد */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10px;
+    min-height: 100%;
 }
 
-/* زر التحليل */
-#fetch-data-button {
-    /* تطبيق تنسيق الزر CTA من style.css مع عرض مناسب */
-    width: auto;
-    min-width: 250px;
-    margin-top: 20px;
+.buttons-container.horizontal-buttons button {
+    width: 33.33%;
+    flex-shrink: 1;
+}
+
+/* أنماط الأزرار المخصصة */
+.cta-button.danger-bg {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    color: white;
+}
+
+.cta-button.danger-bg:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+.cta-button.accent-bg {
+    background-color: #4a86e8;
+    border-color: #4a86e8;
+    color: white;
+}
+
+.cta-button.accent-bg:hover {
+    background-color: #3b71c7;
+    border-color: #3b71c7;
 }
 
 .status-message {
     margin-top: 15px;
     font-weight: bold;
     font-size: 1.1em;
+    text-align: center;
 }
 
-/* ----------------------------------------------------------------- */
 /* شبكة KPIs (الإحصائيات الرئيسية) */
-/* ----------------------------------------------------------------- */
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
 }
 
-.kpi-card {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: var(--border-radius-base, 8px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    text-align: center;
-    border-top: 5px solid var(--color-primary-green, #4CAF50); /* استخدام المتغير */
-}
-
 .kpi-card h3 {
     font-size: 1.1em;
-    color: var(--color-text-dark, #333);
+    color: #333;
     margin-bottom: 5px;
 }
 
 .kpi-card .value {
     font-size: 2.2em;
     font-weight: bold;
-    color: var(--color-primary-green, #4CAF50);
+    color: #4CAF50;
     margin: 5px 0;
 }
 
 .kpi-card i {
     font-size: 1.5em;
-    color: var(--color-primary-green, #4CAF50);
+    color: #4CAF50;
     margin-bottom: 10px;
 }
 
-/* حالات خاصة لبطاقات KPI (تحديث الألوان لاستخدام المتغيرات إن أمكن) */
-.kpi-card.status-info {
-    border-top-color: var(--color-accent-blue, #4a86e8);
-}
-.kpi-card.status-info .value, .kpi-card.status-info i {
-    color: var(--color-accent-blue, #4a86e8);
-}
-.status-warning {
-    border-top-color: #FFC107; 
-}
-.status-warning .value, .status-warning i {
-    color: #FFC107;
+/* لون KPI الرياح */
+.info-bg {
+    border-top-color: #00bcd4;
 }
 
-.status-danger {
-    border-top-color: #F44336; 
-}
-.status-danger .value, .status-danger i {
-    color: #F44336;
+.info-bg .value,
+.info-bg i {
+    color: #00bcd4;
 }
 
-/* ----------------------------------------------------------------- */
-/* شبكة المراقبة والرسوم البيانية (Charts) */
-/* ----------------------------------------------------------------- */
+/* شبكة المراقبة والرسوم البيانية */
 .monitoring-grid {
     display: grid;
-    /* التعديل: عمودين في الوضع الطبيعي */
-    grid-template-columns: 2fr 1fr; 
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
-/* دمج الحاويات الأصغر لتظهر في العمود الأصغر */
-.info-card-group {
+/* ----------------------------------------------------------------- */
+/* تنسيق بطاقة تفاصيل الطقس الجديدة (weather-details-card) */
+/* ----------------------------------------------------------------- */
+.weather-details-card {
+    grid-column: span 3;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f0ff 100%);
+    padding: 30px;
+}
+
+.weather-details-card h2 {
+    text-align: center;
+    color: #0d47a1;
+}
+
+.weather-details-card .weather-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.weather-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.main-temp {
+    text-align: center;
+}
+
+.current-temp {
+    font-size: 3em;
+    font-weight: 700;
+    color: #4a86e8;
+    margin: 0;
+}
+
+.min-max-temp {
+    font-size: 1.1em;
+    color: #555;
+}
+
+.description {
+    display: block;
+    font-style: italic;
+    color: #777;
+}
+
+/* تنسيق المربعات التفصيلية */
+.detail-box p {
+    margin: 5px 0;
+    font-size: 0.95em;
+    color: #333;
+}
+
+.detail-box i {
+    margin-left: 8px;
+    color: #00bcd4;
+}
+
+
+/* المخطط الذي يمتد على عرض الشبكة */
+.full-span-chart {
+    grid-column: 1 / -1;
+    min-height: 350px !important;
+}
+
+/* صندوق التواصل الخاص (Special CTA) */
+.special-cta-box {
+    background-color: #f7f7f7;
+    border: 2px solid #93c47d;
+    padding: 30px;
+    text-align: center;
+    grid-column: span 1;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    justify-content: space-between;
 }
 
-/* جعل بطاقات المعلومات تأخذ العرض الكامل في حالة الموبايل */
-.chart-card, .info-card {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: var(--border-radius-base, 8px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    min-height: 250px; 
+.special-cta-box h2 {
+    color: #388e3c;
+    font-size: 1.6em;
 }
 
-.chart-card h2, .info-card h2 {
-    font-size: 1.4em;
-    color: var(--color-text-dark, #333);
-    margin-bottom: 15px;
-    text-align: right;
-}
-
-/* تنسيق التنبيهات */
-.alerts ul {
-    list-style: none;
-    padding: 0;
-}
-
-.alerts li {
-    /* استخدام الألوان التحذيرية */
-    background-color: var(--color-background-light, #fff3e0);
-    border-right: 5px solid #ff9800;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    font-size: 0.95em;
-    text-align: right;
-}
-
-.alerts li i {
-    margin-left: 10px;
-    color: #ff9800;
-}
-
-/* حالة الري/الإجراء المقترح */
-.irrigation-status .status-detail p {
-    margin-bottom: 10px;
-    font-size: 1.1em;
-}
-.irrigation-status .status-toggle {
-    /* استخدام زر CTA الرئيسي */
-    background-color: var(--color-primary-green, #4CAF50);
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 15px;
+.special-cta-box .cta-message {
     font-weight: bold;
-    display: inline-block;
+    margin-bottom: 20px;
 }
 
-/* ----------------------------------------------------------------- */
-/* ضبط استجابة الشاشة الصغيرة (Media Queries) */
-/* ----------------------------------------------------------------- */
-@media (max-width: 992px) {
-    /* تحويل شبكة المراقبة إلى عمود واحد */
+/* تنسيق التذييل والرسالة التحفيزية */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 30px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #eee;
+}
+
+.motivational-text {
+    font-style: italic;
+    color: #666;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+/* إعادة تعريف الاستجابة للشاشات المتوسطة والصغيرة */
+@media (max-width: 1200px) {
     .monitoring-grid {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .weather-details-card,
+    .full-span-chart,
+    .chart-card,
+    .info-card,
+    .special-cta-box {
+        grid-column: span 2;
+    }
+
+    .weather-details-card .weather-grid {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .location-input-section .input-group {
-        display: block; /* التأكد من أن الـ textarea لا يحتاج لـ flex-direction */
-    }
-    
-    .location-input-section textarea, 
-    .location-input-section button {
-        width: 100%;
-        max-width: none;
-        box-sizing: border-box;
+    .monitoring-grid {
+        grid-template-columns: 1fr;
     }
 
-    .kpi-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 15px;
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons-container.horizontal-buttons {
+        flex-direction: column;
+    }
+
+    .weather-details-card .weather-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .special-cta-box {
+        grid-column: 1;
     }
 }

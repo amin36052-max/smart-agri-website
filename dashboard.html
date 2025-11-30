@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - رصد المزرعة الذكي</title>
-    
-    <link rel="stylesheet" href="css/style.css"> 
-    <link rel="stylesheet" href="css/dashboard.css"> 
-    
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    
+
     <header class="main-header">
         <div class="logo">SMART AGRI / GREEN MIND</div>
         <button class="menu-toggle" aria-controls="main-nav" aria-expanded="false">
@@ -28,100 +28,161 @@
                 <li><a href="services.html">خدماتنا</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
                 <li><a href="dashboard.html" class="active">لوحة التحكم</a></li>
-                <li><a href="ai-assistant.html">المساعد الذكي</a></li> 
+                <li><a href="ai-assistant.html">المساعد الذكي</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="dashboard-container">
-        
-        <section class="location-input-section geojson-input-section">
-            <h2><i class="fas fa-map-marked-alt"></i> تحديد موقع المزرعة للتحليل</h2>
-            
-            <p class="contact-prompt">
-                **تواصل معنا للحصول على إحداثيات موقعك الجغرافي (GeoJSON Polygon) وتفاصيله.**
-            </p>
-            
-            <div class="input-group full-width">
-                <label for="geojson-input">أدخل بيانات GeoJSON للمزرعة (Polygon):</label>
-                <textarea id="geojson-input" 
-                          placeholder='{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [ [ [30.9, 29.5], [30.9, 29.6], [31.0, 29.6], [31.0, 29.5], [30.9, 29.5] ] ] } }' 
-                          dir="ltr" 
-                          required></textarea>
+
+        <section class="location-input-section manual-data-input">
+            <h2><i class="fas fa-edit"></i> إدخال بيانات الرصد اليدوي والطقس</h2>
+
+            <div class="input-grid">
+
+                <div class="input-group">
+                    <label for="lat-input">خط العرض (Latitude)</label>
+                    <input type="text" id="lat-input" placeholder="مثال: 30.75" dir="ltr" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="lon-input">خط الطول (Longitude)</label>
+                    <input type="text" id="lon-input" placeholder="مثال: 29.31" dir="ltr" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="date-input">تاريخ القراءة</label>
+                    <input type="date" id="date-input" value="" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="ndvi-input">مؤشر NDVI اليدوي (0.00-1.00)</label>
+                    <input type="number" id="ndvi-input" placeholder="مثال: 0.75" min="0" max="1" step="0.01" dir="ltr">
+                </div>
+
+                <div class="input-group">
+                    <label for="moisture-input">نسبة الرطوبة اليدوية (%)</label>
+                    <input type="number" id="moisture-input" placeholder="مثال: 65" min="0" max="100" step="1"
+                        dir="ltr">
+                </div>
+
+                <div class="buttons-container horizontal-buttons">
+                    <button id="save-data-button" class="cta-button primary-bg"><i class="fas fa-save"></i> حفظ</button>
+                    <button id="fetch-weather-button" class="cta-button accent-bg"><i class="fas fa-cloud-sun"></i>
+                        تحديث الطقس</button>
+                    <button id="reset-data-button" class="cta-button danger-bg"><i class="fas fa-redo-alt"></i> إعادة
+                        ضبط</button>
+                </div>
+
             </div>
-            
-            <div id="location-status" class="status-message">يُرجى إدخال كائن GeoJSON سليم للمتابعة.</div>
-            
-            <button id="fetch-data-button" class="cta-button primary-bg"><i class="fas fa-search"></i> تحليل ورصد الموقع</button>
+
+            <div id="location-status" class="status-message">أدخل الإحداثيات لحفظ القراءة وجلب الطقس.</div>
         </section>
-        
-        <div id="dashboard-content" style="display:none;">
+
+        <div id="dashboard-content">
             <h1 class="section-title"><i class="fas fa-chart-line"></i> نظرة عامة على المزرعة الذكية</h1>
 
             <div class="kpi-grid">
-                
                 <div class="kpi-card status-ok">
                     <i class="fas fa-seedling"></i>
                     <h3>صحة المحصول (NDVI)</h3>
                     <p class="value" id="kpi-health">--</p>
-                    <span class="status-indicator">آخر قراءة NDVI</span>
+                    <span class="status-indicator">آخر قراءة يدوية</span>
                 </div>
 
-                <div class="kpi-card status-info">
-                    <i class="fas fa-water"></i>
-                    <h3>المحتوى المائي (NDWI)</h3>
-                    <p class="value" id="kpi-water">--</p>
-                    <span class="status-indicator">رصد الأقمار الصناعية</span>
-                </div>
-                
                 <div class="kpi-card status-warning">
-                    <i class="fas fa-temperature-high"></i>
+                    <i class="fas fa-tint"></i>
+                    <h3>الرطوبة المقدرة</h3>
+                    <p class="value" id="kpi-moisture">--</p>
+                    <span class="status-indicator">آخر قراءة يدوية</span>
+                </div>
+
+                <div class="kpi-card success-bg">
+                    <i class="fas fa-cloud-sun"></i>
                     <h3>التوقع الحراري (اليوم)</h3>
                     <p class="value" id="kpi-weather-temp">--</p>
                     <span class="status-indicator">بيانات OpenWeather</span>
                 </div>
-                
-                <div class="kpi-card">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <h3>الموقع الحالي</h3>
-                    <p class="value" id="kpi-location">--</p>
-                    <span class="status-indicator">اسم القطعة (بعد التحميل)</span>
+
+                <div class="kpi-card info-bg">
+                    <i class="fas fa-wind"></i>
+                    <h3>سرعة واتجاه الرياح</h3>
+                    <p class="value" id="kpi-wind">--</p>
+                    <span class="status-indicator">بيانات OpenWeather</span>
                 </div>
             </div>
-            
+
             <div class="monitoring-grid">
-                
+
+                <div class="info-card weather-details-card">
+                    <h2><i class="fas fa-temperature-high"></i> تفاصيل الطقس الحالي والمناخ</h2>
+                    <div class="weather-grid">
+                        <div class="weather-item main-temp">
+                            <p class="current-temp" id="current-temp-val">--</p>
+                            <p class="min-max-temp" id="min-max-temp-val">-- / --</p>
+                            <span class="description" id="weather-description">--</span>
+                        </div>
+
+                        <div class="weather-item detail-box">
+                            <p><i class="fas fa-sun"></i> ساعات النهار: <strong id="day-length">--</strong></p>
+                            <p><i class="fas fa-moon"></i> ساعات الليل: <strong id="night-length">--</strong></p>
+                            <p><i class="fas fa-water"></i> الرطوبة الجوية: <strong id="humidity-val">--</strong></p>
+                        </div>
+
+                        <div class="weather-item detail-box">
+                            <p><i class="fas fa-wind"></i> سرعة الرياح: <strong id="wind-speed-val">--</strong></p>
+                            <p><i class="fas fa-compass"></i> الاتجاه: <strong id="wind-dir-val">--</strong></p>
+                            <p><i class="fas fa-cloud"></i> نسبة الغيوم: <strong id="clouds-val">--</strong></p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="chart-card">
-                    <h2>مؤشر صحة المحصول (NDVI) - آخر 6 أشهر</h2>
+                    <h2>مؤشر صحة المحصول (NDVI) - سجل القياسات</h2>
                     <canvas id="ndviChart"></canvas>
                 </div>
 
                 <div class="chart-card">
-                    <h2>المحتوى المائي للمحصول (NDWI) - آخر 6 أشهر</h2>
-                    <canvas id="waterContentChart"></canvas>
+                    <h2>نسبة الرطوبة (%) - سجل القياسات</h2>
+                    <canvas id="moistureChart"></canvas>
+                </div>
+
+                <div class="chart-card full-span-chart">
+                    <h2>التوقعات البيئية للأسبوع القادم (سحب، UV، ضوء)</h2>
+                    <canvas id="weatherDetailsChart"></canvas>
                 </div>
 
                 <div class="info-card alerts">
-                    <h2><i class="fas fa-exclamation-triangle"></i> التنبيهات والتوصيات</h2>
+                    <h2><i class="fas fa-exclamation-triangle"></i> التنبيهات والتوصيات (الطقس والرصد)</h2>
                     <ul id="alert-list">
-                        <li><i class="fas fa-sun"></i> توقعات لـ 7 أيام: جفاف محتمل. زيادة الري.</li>
-                        <li><i class="fas fa-chart-line"></i> منحنى NDVI منخفض: يرجى فحص التغذية.</li>
+                        <li>يتم تحديث التوصيات...</li>
                     </ul>
                 </div>
-                
+
                 <div class="info-card irrigation-status">
-                    <h2>تقرير الطقس وتوصيات الري (OpenWeather)</h2>
+                    <h2>تقرير الطقس وتوصيات الري</h2>
                     <div class="status-detail">
-                        <p id="suggested-action">يتم تحليل بيانات الطقس لمدة أسبوع قادم...</p>
-                        <p>تاريخ آخر تحليل: <strong id="last-analysis">--</strong></p>
-                        <button class="cta-button status-toggle"><i class="fas fa-tint"></i> توصيات الري التفصيلية</button>
+                        <p id="suggested-action">اضغط على "تحديث الطقس" للحصول على توصيات أسبوعية.</p>
+                        <p>تاريخ آخر تحديث: <strong id="last-analysis">--</strong></p>
                     </div>
+                </div>
+
+                <div class="info-card special-cta-box">
+                    <h2>تحليل مخصص لمزرعتك</h2>
+                    <p class="cta-message">كلمنا لو عايز تعرف معلومات أكتر وأدق معموله مخصوص ليك ولمزرعتك.</p>
+                    <a href="contact.html" class="cta-button primary-bg">تواصل معنا الآن</a>
                 </div>
             </div>
         </div>
     </main>
 
+    <footer>
+        <p>&copy; 2025 SMART AGRI. جميع الحقوق محفوظة.</p>
+        <p class="motivational-text">هذا الموقع مازال قيد التطوير المستمر ليكون مستقبلاً أكبر وأكثر ذكاءً.</p>
+    </footer>
+
     <script src="js/main.js"></script>
-    <script src="js/dashboard.js"></script> 
+    <script src="js/dashboard.js"></script>
 </body>
+
 </html>
