@@ -72,19 +72,34 @@
 
 /* تنسيق حاوية الأزرار لتصبح أفقية وتتوضع في الشبكة */
 .buttons-container.horizontal-buttons {
-    grid-column: span 1;
-    /* تأخذ مساحة عمود واحد */
+    /* خَلِ الحاوية تأخذ كامل عرض الشبكة لتوسيط الأزرار */
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 10px;
-    min-height: 100%;
+    justify-content: center;
+    /* توسيط مجموع الأزرار أفقياً */
+    align-items: center;
+    /* محاذاة رأسية متساوية */
+    gap: 12px;
+    padding-top: 6px;
 }
 
 .buttons-container.horizontal-buttons button {
-    width: 33.33%;
-    flex-shrink: 1;
+    /* اجعل الأزرار أحجام متساوية داخل الحاوية */
+    flex: 1 1 0;
+    max-width: 220px;
+    /* تحدد أقصى عرض لكل زر */
+    min-width: 120px;
+    /* للحفاظ على قابلية الضغط */
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    text-align: center;
 }
 
 /* أنماط الأزرار المخصصة */
@@ -125,10 +140,45 @@
     margin-bottom: 30px;
 }
 
+/* أساسيات بطاقات KPI - خلفية صلبة وألوان مرئية */
+.kpi-card {
+    background-color: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+}
+
+.kpi-card.status-ok {
+    border-left: 6px solid #4CAF50;
+}
+
+.kpi-card.status-warning {
+    border-left: 6px solid #f39c12;
+}
+
+.kpi-card.success-bg {
+    border-left: 6px solid #4a86e8;
+}
+
 .kpi-card h3 {
     font-size: 1.1em;
     color: #333;
     margin-bottom: 5px;
+}
+
+.kpi-card.small-card {
+    padding: 18px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.kpi-card.small-card .value {
+    font-size: 1.8em;
 }
 
 .kpi-card .value {
@@ -159,6 +209,17 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+}
+
+/* تأمين خلفيات البطاقات الأخرى (مربعات معلومات ومخططات) */
+.chart-card,
+.info-card,
+.special-cta-box {
+    background-color: #ffffff;
+    border: 1px solid #e9e9e9;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
 }
 
 /* ----------------------------------------------------------------- */
@@ -298,6 +359,12 @@ footer {
 
     .buttons-container.horizontal-buttons {
         flex-direction: column;
+    }
+
+    .buttons-container.horizontal-buttons button {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
     }
 
     .weather-details-card .weather-grid {

@@ -114,26 +114,32 @@
 
             <div class="monitoring-grid">
 
-                <div class="info-card weather-details-card">
-                    <h2><i class="fas fa-temperature-high"></i> تفاصيل الطقس الحالي والمناخ</h2>
-                    <div class="weather-grid">
-                        <div class="weather-item main-temp">
-                            <p class="current-temp" id="current-temp-val">--</p>
-                            <p class="min-max-temp" id="min-max-temp-val">-- / --</p>
-                            <span class="description" id="weather-description">--</span>
-                        </div>
+                <!-- مفكك: عرض تفاصيل الطقس في 3 بطاقات صغيرة تشبه KPI -->
+                <div class="kpi-card small-card">
+                    <i class="fas fa-temperature-high"></i>
+                    <h3>الطقس الحالي</h3>
+                    <p class="value" id="current-temp-val">--</p>
+                    <div class="status-indicator" style="margin-top:8px; font-size:0.95rem; color:#666;"> <span
+                            id="weather-description">--</span><br><small id="min-max-temp-val">-- / --</small></div>
+                </div>
 
-                        <div class="weather-item detail-box">
-                            <p><i class="fas fa-sun"></i> ساعات النهار: <strong id="day-length">--</strong></p>
-                            <p><i class="fas fa-moon"></i> ساعات الليل: <strong id="night-length">--</strong></p>
-                            <p><i class="fas fa-water"></i> الرطوبة الجوية: <strong id="humidity-val">--</strong></p>
-                        </div>
+                <div class="kpi-card small-card">
+                    <i class="fas fa-water"></i>
+                    <h3>الرطوبة وساعات النهار</h3>
+                    <p class="value" id="humidity-val">--</p>
+                    <div class="status-indicator" style="margin-top:8px; font-size:0.95rem; color:#666;">
+                        <p>ساعات النهار: <strong id="day-length">--</strong></p>
+                        <p>ساعات الليل: <strong id="night-length">--</strong></p>
+                    </div>
+                </div>
 
-                        <div class="weather-item detail-box">
-                            <p><i class="fas fa-wind"></i> سرعة الرياح: <strong id="wind-speed-val">--</strong></p>
-                            <p><i class="fas fa-compass"></i> الاتجاه: <strong id="wind-dir-val">--</strong></p>
-                            <p><i class="fas fa-cloud"></i> نسبة الغيوم: <strong id="clouds-val">--</strong></p>
-                        </div>
+                <div class="kpi-card small-card">
+                    <i class="fas fa-wind"></i>
+                    <h3>الرياح والغيوم</h3>
+                    <p class="value" id="wind-speed-val">--</p>
+                    <div class="status-indicator" style="margin-top:8px; font-size:0.95rem; color:#666;">
+                        <p>الاتجاه: <strong id="wind-dir-val">--</strong></p>
+                        <p>الغيوم: <strong id="clouds-val">--</strong></p>
                     </div>
                 </div>
 
