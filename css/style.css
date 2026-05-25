@@ -1108,27 +1108,38 @@ footer {
 
     /* 3. تنسيق وإخفاء القائمة الرئيسية */
     nav {
-        /* وضع القائمة في طبقة علوية لتظهر فوق المحتوى */
-        position: absolute;
+        /* ضع القائمة ثابتة فوق المحتوى لتظهر دائمًا فوق الخلفية */
+        position: fixed;
         top: 60px;
-        /* يجب أن تكون هذه القيمة أكبر من ارتفاع الـ Header */
         right: 0;
-        width: 80%;
-        /* عرض القائمة المفتوحة */
+        width: 85%;
+        max-width: 420px;
+        /* إخفاء المحتوى بشكل عمودي */
         max-height: 0;
-        /* هذا هو مفتاح إخفاء القائمة */
         overflow: hidden;
         background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 20;
-        /* الحركة السلسة عند الفتح والإغلاق */
-        transition: max-height 0.3s ease-in-out;
+        box-shadow: 0 8px 24px rgba(6, 10, 14, 0.18);
+        z-index: 4000;
+        transition: max-height 0.32s ease-in-out, transform 0.28s ease;
+        transform-origin: top right;
     }
 
     /* 4. حالة الفتح (عند إضافة فئة .is-open بواسطة JavaScript) */
     nav.is-open {
-        max-height: 500px;
-        /* قيمة كبيرة لضمان ظهور كل الروابط */
+        max-height: calc(100vh - 64px);
+        transform: translateY(0);
+    }
+
+    /* تأكد أن الـ header نفسه يبقى فوق الخلفيات لكنه أسفل القائمة */
+    .main-header {
+        position: relative;
+        z-index: 3900;
+        background: white;
+    }
+
+    /* زر الهامبرغر يجب أن يبقى قابلًا للنقر ويظهر فوق كل شيء */
+    .menu-toggle {
+        z-index: 4100;
     }
 
     /* 5. تنسيق الروابط داخل القائمة المفتوحة (عموديًا) */
