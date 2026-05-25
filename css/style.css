@@ -45,7 +45,9 @@
     padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     font-family: 'Cairo', sans-serif;
@@ -58,12 +60,28 @@ body {
 }
 
 /* تطبيق خط KAFA على العناوين */
-h1,h2,h3,h4,h5,h6,.logo,.service-card h2,.page-intro h1,.hero-content h1 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.logo,
+.service-card h2,
+.page-intro h1,
+.hero-content h1 {
     font-family: 'KAFA', 'Cairo', sans-serif;
 }
 
-a { text-decoration: none; color: var(--color-accent-blue); transition: color var(--transition-speed); }
-a:hover { color: var(--color-primary-green); }
+a {
+    text-decoration: none;
+    color: var(--color-accent-blue);
+    transition: color var(--transition-speed);
+}
+
+a:hover {
+    color: var(--color-primary-green);
+}
 
 /* -----------------------------------------------------------------
    4. تنسيق شريط التنقل (Header & Navigation)
@@ -134,7 +152,8 @@ nav ul li .active {
     background-color: var(--color-primary-green);
     border-radius: 3px;
     transition: all 0.28s ease;
-    position: relative; /* containing block for pseudo elements */
+    position: relative;
+    /* containing block for pseudo elements */
 }
 
 .hamburger-icon::before,
@@ -149,8 +168,13 @@ nav ul li .active {
     transition: transform 0.28s ease, top 0.28s ease, opacity 0.28s ease;
 }
 
-.hamburger-icon::before { top: -8px; }
-.hamburger-icon::after { top: 8px; }
+.hamburger-icon::before {
+    top: -8px;
+}
+
+.hamburger-icon::after {
+    top: 8px;
+}
 
 /* -----------------------------------------------------------------
    5. قسم البطل (Hero Section) - التعديلات هنا
@@ -1070,6 +1094,19 @@ footer {
     /* حالة الفتح: ادفع الدرج للداخل */
     nav.is-open {
         transform: translateX(0);
+    }
+
+    /* عندما تكون القائمة مفتوحة: حول الهامبرغر إلى X */
+    .menu-toggle[aria-expanded="true"] .hamburger-icon {
+        background-color: transparent;
+    }
+
+    .menu-toggle[aria-expanded="true"] .hamburger-icon::before {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] .hamburger-icon::after {
+        transform: translateY(-8px) rotate(-45deg);
     }
 
     /* overlay عند فتح القائمة ليمنع التفاعل مع المحتوى الخلفي */

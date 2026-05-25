@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainNav = document.querySelector('#main-nav');
 
     if (menuToggle && mainNav) {
+        // حفظ المرجع الأصلي لموضع الـ nav لنعيده لاحقًا
+        const navOriginalParent = mainNav.parentNode;
+        const navOriginalNext = mainNav.nextSibling;
+
         // إضافة مستمع حدث عند النقر على الزر
         menuToggle.addEventListener('click', () => {
 
@@ -19,20 +23,49 @@ document.addEventListener('DOMContentLoaded', () => {
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
             menuToggle.setAttribute('aria-expanded', !isExpanded);
 
-            // إدارة overlay: أنشئ عنصر تغطية إذا لم يكن موجودًا ثم فعّله/أوقفه
+            // إدارة overlay: أنشئ عنصر تغطية إذا لم يكن موجودًا
             let overlay = document.querySelector('.site-overlay');
             if (!overlay) {
                 overlay = document.createElement('div');
                 overlay.className = 'site-overlay';
                 document.body.appendChild(overlay);
             }
-            if (opened) overlay.classList.add('active'); else overlay.classList.remove('active');
+
+            if (opened) {
+                overlay.classList.add('active');
+
+                // لنضمن أن الـ nav ليس مغطّى بالـ overlay، انقله مؤقتًا إلى نهاية الـ body
+                if (window.innerWidth <= 768) {
+                    document.body.appendChild(mainNav);
+                }
+
+            } else {
+                overlay.classList.remove('active');
+
+                // أعد الـ nav إلى موضعه الأصلي إذا كنا قد نقلناه
+                if (window.innerWidth <= 768 && navOriginalParent) {
+                    if (navOriginalNext && navOriginalNext.parentNode === navOriginalParent) {
+                        navOriginalParent.insertBefore(mainNav, navOriginalNext);
+                    } else {
+                        navOriginalParent.appendChild(mainNav);
+                    }
+                }
+            }
 
             // إغلاق القائمة عند الضغط على الـ overlay
             overlay.onclick = () => {
                 mainNav.classList.remove('is-open');
                 overlay.classList.remove('active');
                 menuToggle.setAttribute('aria-expanded', 'false');
+
+                // أعد الـ nav إلى موضعه الأصلي عند الإغلاق
+                if (window.innerWidth <= 768 && navOriginalParent) {
+                    if (navOriginalNext && navOriginalNext.parentNode === navOriginalParent) {
+                        navOriginalParent.insertBefore(mainNav, navOriginalNext);
+                    } else {
+                        navOriginalParent.appendChild(mainNav);
+                    }
+                }
             };
         });
     }
