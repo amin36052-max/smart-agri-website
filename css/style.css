@@ -1106,28 +1106,29 @@ footer {
         display: block;
     }
 
-    /* 3. تنسيق وإخفاء القائمة الرئيسية */
+    /* 4. حالة الفتح (عند إضافة فئة .is-open بواسطة JavaScript) */
+    /* 3. تنسيق وإخفاء القائمة الرئيسية - نستخدم درج جانبي (drawer) */
     nav {
-        /* ضع القائمة ثابتة فوق المحتوى لتظهر دائمًا فوق الخلفية */
         position: fixed;
-        top: 60px;
+        top: 0;
         right: 0;
+        height: 100vh;
         width: 85%;
         max-width: 420px;
-        /* إخفاء المحتوى بشكل عمودي */
-        max-height: 0;
-        overflow: hidden;
         background-color: white;
-        box-shadow: 0 8px 24px rgba(6, 10, 14, 0.18);
-        z-index: 4000;
-        transition: max-height 0.32s ease-in-out, transform 0.28s ease;
-        transform-origin: top right;
+        box-shadow: 0 12px 40px rgba(6, 10, 14, 0.28);
+        z-index: 5000;
+        /* إخفاء الدرج خارج الشاشة إلى اليمين */
+        transform: translateX(110%);
+        transition: transform 0.32s cubic-bezier(.2, .9, .2, 1);
+        will-change: transform;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    /* 4. حالة الفتح (عند إضافة فئة .is-open بواسطة JavaScript) */
+    /* حالة الفتح: ادفع الدرج للداخل */
     nav.is-open {
-        max-height: calc(100vh - 64px);
-        transform: translateY(0);
+        transform: translateX(0);
     }
 
     /* تأكد أن الـ header نفسه يبقى فوق الخلفيات لكنه أسفل القائمة */
