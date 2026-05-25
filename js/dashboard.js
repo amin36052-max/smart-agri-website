@@ -13,7 +13,7 @@ const LOCAL_STORAGE_KEY = 'smart_agri_local_readings';
 const latInput = document.getElementById('lat-input');
 const lonInput = document.getElementById('lon-input');
 const dateInput = document.getElementById('date-input');
-const ndviInput = document.getElementById('ndvi-input');
+const ndviInput = document.getElementById('ndvi-input'); // may be null if NDVI removed
 const moistureInput = document.getElementById('moisture-input');
 
 const saveDataButton = document.getElementById('save-data-button');
@@ -61,20 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
 // 3. دالة حفظ البيانات اليدوية
 function saveManualData() {
     const date = dateInput.value;
-    const ndvi = parseFloat(ndviInput.value);
     const moisture = parseFloat(moistureInput.value);
+    // NDVI may have been removed from the UI; parse only if present
+    const ndvi = (ndviInput && ndviInput.value) ? parseFloat(ndviInput.value) : null;
 
-    if (!date || isNaN(ndvi) || isNaN(moisture)) {
-        updateStatus('الرجاء إدخال تاريخ وقيم NDVI والرطوبة بشكل صحيح.', 'error');
+    if (!date || isNaN(moisture)) {
+        updateStatus('الرجاء إدخال تاريخ وقيمة الرطوبة بشكل صحيح.', 'error');
         return;
     }
 
-    if (ndvi < 0 || ndvi > 1 || moisture < 0 || moisture > 100) {
-        updateStatus('تأكد أن NDVI بين 0 و 1، والرطوبة بين 0 و 100.', 'error');
+    if (moisture < 0 || moisture > 100) {
+        updateStatus('تأكد أن الرطوبة بين 0 و 100.', 'error');
         return;
     }
 
-    // تهيئة القراءة الجديدة
+    // تهيئة القراءة الجديدة (NDVI اختياري)
     const newReading = { date, ndvi, moisture };
 
     // تحميل السجل الحالي
@@ -126,7 +127,7 @@ function loadLocalDataAndRender() {
     const kpiHealthEl = document.getElementById('kpi-health');
     const kpiMoistureEl = document.getElementById('kpi-moisture');
     const kpiLocationEl = document.getElementById('kpi-location');
-    if (kpiHealthEl) kpiHealthEl.textContent = (latest.ndvi * 100).toFixed(1) + '%';
+    if (kpiHealthEl) kpiHealthEl.textContent = latest.ndvi ? (latest.ndvi * 100).toFixed(1) + '%' : '--';
     if (kpiMoistureEl) kpiMoistureEl.textContent = latest.moisture.toFixed(0) + '%';
     if (kpiLocationEl) kpiLocationEl.textContent = `رصد بتاريخ: ${latest.date}`;
 
@@ -147,28 +148,18 @@ function drawCharts(data) {
     if (ndviChartInstance) ndviChartInstance.destroy();
     if (moistureChartInstance) moistureChartInstance.destroy();
 
-    // رسم منحنى NDVI
-    ndviChartInstance = new Chart(
-        document.getElementById('ndviChart'),
-        {
+    // رسم منحنى NDVI (إن وجد عنصر الرسم في الصفحة)
+    const ndviCanvas = document.getElementById('ndviChart');
+    if (ndviCanvas) {
+        ndviChartInstance = new Chart(ndviCanvas, {
             type: 'line',
             data: {
                 labels: dates,
-                datasets: [{
-                    label: 'مؤشر NDVI',
-                    data: ndviValues,
-                    borderColor: 'rgb(56, 118, 29)',
-                    tension: 0.1,
-                    fill: false
-                }]
+                datasets: [{ label: 'مؤشر NDVI', data: ndviValues, borderColor: 'rgb(56, 118, 29)', tension: 0.1, fill: false }]
             },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, max: 1.0, title: { display: true, text: 'NDVI' } } }
-            }
-        }
-    );
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 1.0, title: { display: true, text: 'NDVI' } } } }
+        });
+    }
 
     // رسم منحنى الرطوبة
     moistureChartInstance = new Chart(

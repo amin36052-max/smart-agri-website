@@ -35,12 +35,131 @@
     </section>
 
     <main>
+        <!-- FEATURES SECTION: three cards -->
+        <section class="features-section reveal">
+            <div class="container">
+                <div class="spectral-intro">
+                    <h3 class="small-title">البصمه الطيفيه</h3>
+                    <p class="spectral-desc">البصمة الطيفية هي التوقيع الضوئي الفريد لكل عنصر على سطح الأرض، حيث تعكس
+                        النباتات والتربة والمياه الضوء بنسب مختلفة، مما يساعدنا على تحليل صحة النبات، واكتشاف الملوحة،
+                        وتحديد رطوبة التربة باستخدام صور الأقمار الصناعية.</p>
+                </div>
+                <div class="features-grid">
+                    <article class="feature-card" data-key="health" tabindex="0">
+                        <div class="feature-icon">🌿</div>
+                        <h3>صحة النبات</h3>
+                        <p class="muted">نراقب صحة النبات ونكتشف الإجهاد والأمراض ونقص العناصر مبكرًا.</p>
+                        <div class="feature-image" style="background-image:url('images/صحه النبات.jpeg');">
+                            <span class="heatmap"></span>
+                        </div>
+                    </article>
+
+                    <article class="feature-card" data-key="moisture" tabindex="0">
+                        <div class="feature-icon">💧</div>
+                        <h3>رطوبة التربة</h3>
+                        <p class="muted">نحدد مستويات رطوبة التربة بدقة لتحسين الري وتوفير المياه.</p>
+                        <div class="feature-image" style="background-image:url('images/الرطوبه.jpeg');">
+                            <span class="heatmap"></span>
+                        </div>
+                    </article>
+
+                    <article class="feature-card" data-key="salinity" tabindex="0">
+                        <div class="feature-icon">⚗️</div>
+                        <h3>الملوحة</h3>
+                        <p class="muted">نكتشف مناطق الملوحة ونقترح حلول لتحسين جودة التربة.</p>
+                        <div class="feature-image" style="background-image:url('images/الاملاح.jpeg');">
+                            <span class="heatmap"></span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW WE WORK: 4 steps with arrows -->
+        <section class="how-we-work reveal">
+            <div class="container">
+                <h2 class="section-title">كيف نعمل ؟</h2>
+                <div class="steps-row">
+                    <div class="step">
+                        <div class="step-circle">1</div>
+                        <img class="step-img" src="images/قمر صناعي.jpg" alt="satellite" />
+                        <h4>الأقمار الصناعية</h4>
+                        <p class="muted">نحصل على صور متعددة الأطياف عالية الدقة من الأقمار الصناعية.</p>
+                    </div>
+                    <div class="step-arrow">←</div>
+                    <div class="step">
+                        <div class="step-circle">2</div>
+                        <img class="step-img" src="images/تحليل البيانات.jpg" alt="data" />
+                        <h4>تحليل البيانات</h4>
+                        <p class="muted">نحلل البيانات باستخدام تقنيات الذكاء الاصطناعي والمهارات الخاصة.</p>
+                    </div>
+                    <div class="step-arrow">←</div>
+                    <div class="step">
+                        <div class="step-circle">3</div>
+                        <img class="step-img" src="images/استخراج معلومات.jpeg" alt="extract" />
+                        <h4>استخراج ذكي</h4>
+                        <p class="muted">نستخرج معلومات دقيقة عن صحة النبات، الرطوبة، والملوحة.</p>
+                    </div>
+                    <div class="step-arrow">←</div>
+                    <div class="step">
+                        <div class="step-circle">4</div>
+                        <img class="step-img" src="images/توصيات ذكيه.jpeg" alt="recommend" />
+                        <h4>التوصيات الذكية</h4>
+                        <p class="muted">نقدّم توصيات عملية واضحة لمساعدتك على اتخاذ قرارات أفضل.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY CHOOSE US -->
+        <section class="why-choose reveal">
+            <div class="container">
+                <h2 class="section-title">لماذا تختارنا ؟</h2>
+                <div class="features-row">
+                    <div class="feature-brief">
+                        <div class="feat-icon">🎯</div>
+                        <h4>دقة عالية</h4>
+                        <p class="muted">بيانات دقيقة وحديثة من أفضل مصادر الأقمار الصناعية.</p>
+                    </div>
+                    <div class="feature-brief">
+                        <div class="feat-icon">⏱️</div>
+                        <h4>توفير الوقت والجهد</h4>
+                        <p class="muted">تحليلات سريعة وتوصيات جاهزة لتوفير وقتك في الحقل.</p>
+                    </div>
+                    <div class="feature-brief">
+                        <div class="feat-icon">🌱</div>
+                        <h4>زراعة مستدامة</h4>
+                        <p class="muted">نساعدك على تقليل الهدر وزيادة الإنتاج بطريقة مستدامة.</p>
+                    </div>
+                    <div class="feature-brief">
+                        <div class="feat-icon">🛡️</div>
+                        <h4>دعم مستمر</h4>
+                        <p class="muted">فريقنا معك دائمًا للإجابة على استفساراتك ومساعدتك.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fullscreen modal for detailed explanation -->
+        <div id="spectral-modal" class="modal-fullscreen" aria-hidden="true">
+            <div class="modal-inner" role="dialog" aria-modal="true">
+                <button class="modal-close" aria-label="اغلاق">×</button>
+                <h2 id="modal-title">عنوان</h2>
+                <div id="modal-body" class="modal-body">
+                    <p>محتوى الشرح سيظهر هنا. يمكنك إضافة صور فيما بعد.</p>
+                    <div class="modal-gallery" id="modal-gallery"></div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer>
         <p>&copy; 2025 SMART AGRI. جميع الحقوق محفوظة.</p>
     </footer>
 
+    <script src="js/ui-enhancements.js"></script>
+    <script src="js/spectral.js"></script>
     <script src="js/main.js"></script>
 </body>
 
