@@ -6,17 +6,14 @@
     /* أخضر تركيز رئيسي */
     --color-light-green: #93c47d;
     --color-accent-blue: #2b9ed9;
-    /* ثانوي تركوازي/أزرق */
     --color-background-light: #fafafa;
     --color-text-dark: #24303a;
     --border-radius-base: 10px;
     --transition-speed: 0.25s;
 
-    /* لوحة جديدة */
     --bg: #fafafa;
     --muted: #6b6f72;
     --accent: #38761d;
-    /* استخدام قديم للتوافق */
     --accent-2: #2b9ed9;
     --card: #ffffff;
     --overlay: rgba(6, 10, 14, 0.45);
@@ -29,22 +26,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
 /* -----------------------------------------------------------------
-   2.1 تعريف خطوط مخصصة (KAFA للعناوين و DAMAS SANA للمحتوى)
-   ضع ملفات الخطوط (woff2/woff) في مجلد `fonts/` بجانب `css/`،
-   أو عدّل مسارات `url()` لتشير إلى مكان ملفات الخط فعليًا.
-   مثال أسماء الملفات المتوقعة: KAFA.woff2 و DAMASSANA.woff2
+   2.1 تعريف خطوط مخصصة (KAFA للعناوين)
    ----------------------------------------------------------------- */
 @font-face {
     font-family: 'KAFA';
-    /* استخدم الملف المرفوع Kafa-Black.ttf بصيغة TTF كخيار افتراضي */
     src: local('KAFA'), url('../fonts/Kafa-Black.ttf') format('truetype');
     font-weight: 400 700;
     font-style: normal;
     font-display: swap;
 }
-
-/* حذفنا DAMAS SANA — سنستخدم KAFA كمصدر الخط الأساسي للموقع كله */
-
 
 /* -----------------------------------------------------------------
    3. إعادة تعيين التنسيق الأساسي (Reset & Base Styling)
@@ -55,15 +45,11 @@
     padding: 0;
 }
 
-html {
-    scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
     font-family: 'Cairo', sans-serif;
-    /* استخدام KAFA كخط افتراضي للموقع */
     font-size: 18px;
-    /* حجم نص افتراضي مُحسّن للقراءة */
     line-height: 1.6;
     color: var(--color-text-dark);
     background-color: var(--color-background-light);
@@ -71,29 +57,13 @@ body {
     text-align: right;
 }
 
-/* تطبيق خط KAFA على كافة العناوين */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.logo,
-.service-card h2,
-.page-intro h1,
-.hero-content h1 {
+/* تطبيق خط KAFA على العناوين */
+h1,h2,h3,h4,h5,h6,.logo,.service-card h2,.page-intro h1,.hero-content h1 {
     font-family: 'KAFA', 'Cairo', sans-serif;
 }
 
-a {
-    text-decoration: none;
-    color: var(--color-accent-blue);
-    transition: color var(--transition-speed);
-}
-
-a:hover {
-    color: var(--color-primary-green);
-}
+a { text-decoration: none; color: var(--color-accent-blue); transition: color var(--transition-speed); }
+a:hover { color: var(--color-primary-green); }
 
 /* -----------------------------------------------------------------
    4. تنسيق شريط التنقل (Header & Navigation)
@@ -157,61 +127,30 @@ nav ul li .active {
 /* -----------------------------------------------------------------
    شكل الأيقونة (الشرطات الثلاثة)
    ----------------------------------------------------------------- */
-.hamburger-icon,
-.hamburger-icon::before,
-.hamburger-icon::after {
-    display: block;
+.hamburger-icon {
+    display: inline-block;
     width: 25px;
     height: 3px;
     background-color: var(--color-primary-green);
     border-radius: 3px;
-    transition: all 0.3s ease;
-    /* لإضافة حركة سلسة عند التبديل */
-    position: absolute;
-    /* وضع مطلق للتحكم الدقيق في الموضع */
-    left: 50%;
-    transform: translateX(110%);
+    transition: all 0.28s ease;
+    position: relative; /* containing block for pseudo elements */
 }
 
 .hamburger-icon::before,
 .hamburger-icon::after {
-    /* لا ندع المحتوى يختفي تحت الهيدر: أضف مساحة عليا مساوية لارتفاع الهيدر */
-    padding-top: 68px;
     content: '';
+    position: absolute;
+    left: 0;
+    width: 25px;
+    height: 3px;
+    background-color: var(--color-primary-green);
+    border-radius: 3px;
+    transition: transform 0.28s ease, top 0.28s ease, opacity 0.28s ease;
 }
 
-/* الشرطة العلوية: توضع أعلى الشرطة الوسطى بـ 8 بكسل */
-.hamburger-icon::before {
-    top: -8px;
-}
-
-/* الشرطة السفلية: توضع أسفل الشرطة الوسطى بـ 8 بكسل */
-.hamburger-icon::after {
-    bottom: -8px;
-}
-
-
-/* -----------------------------------------------------------------
-   حالة الفتح: تحويل الأيقونة إلى شكل (X)
-   ----------------------------------------------------------------- */
-.menu-toggle[aria-expanded="true"] .hamburger-icon {
-    /* جعل الخط الوسطي شفافاً ليختفي */
-    background-color: transparent;
-}
-
-.menu-toggle[aria-expanded="true"] .hamburger-icon::before {
-    /* تدوير الخط العلوي بزاوية 45 درجة */
-    transform: translateX(-50%) rotate(45deg);
-    top: 0;
-    /* محاذاة إلى المنتصف */
-}
-
-.menu-toggle[aria-expanded="true"] .hamburger-icon::after {
-    /* تدوير الخط السفلي بزاوية -45 درجة */
-    transform: translateX(-50%) rotate(-45deg);
-    bottom: 0;
-    /* محاذاة إلى المنتصف */
-}
+.hamburger-icon::before { top: -8px; }
+.hamburger-icon::after { top: 8px; }
 
 /* -----------------------------------------------------------------
    5. قسم البطل (Hero Section) - التعديلات هنا
@@ -1119,7 +1058,7 @@ footer {
         max-width: 420px;
         background-color: white;
         box-shadow: 0 12px 40px rgba(6, 10, 14, 0.28);
-        z-index: 5000;
+        z-index: 100550 !important;
         /* إخفاء الدرج خارج الشاشة إلى اليمين */
         transform: translateX(110%);
         transition: transform 0.32s cubic-bezier(.2, .9, .2, 1);
@@ -1137,9 +1076,10 @@ footer {
     .site-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.35);
-        z-index: 4500;
+        background: rgba(0, 0, 0, 0.28);
+        z-index: 100500 !important;
         display: none;
+        pointer-events: auto;
     }
 
     .site-overlay.active {
@@ -1155,7 +1095,7 @@ footer {
 
     /* زر الهامبرغر يجب أن يبقى قابلًا للنقر ويظهر فوق كل شيء */
     .menu-toggle {
-        z-index: 4100;
+        z-index: 100600 !important;
     }
 
     /* 5. تنسيق الروابط داخل القائمة المفتوحة (عموديًا) */
