@@ -170,11 +170,13 @@ nav ul li .active {
     position: absolute;
     /* وضع مطلق للتحكم الدقيق في الموضع */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(110%);
 }
 
 .hamburger-icon::before,
 .hamburger-icon::after {
+    /* لا ندع المحتوى يختفي تحت الهيدر: أضف مساحة عليا مساوية لارتفاع الهيدر */
+    padding-top: 68px;
     content: '';
 }
 
@@ -1129,6 +1131,19 @@ footer {
     /* حالة الفتح: ادفع الدرج للداخل */
     nav.is-open {
         transform: translateX(0);
+    }
+
+    /* overlay عند فتح القائمة ليمنع التفاعل مع المحتوى الخلفي */
+    .site-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 4500;
+        display: none;
+    }
+
+    .site-overlay.active {
+        display: block;
     }
 
     /* تأكد أن الـ header نفسه يبقى فوق الخلفيات لكنه أسفل القائمة */

@@ -13,11 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.addEventListener('click', () => {
 
             // تبديل (إضافة/إزالة) فئة is-open التي تفتح القائمة في CSS
-            mainNav.classList.toggle('is-open');
+            const opened = mainNav.classList.toggle('is-open');
 
             // تحديث حالة إمكانية الوصول (Accessibility)
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
             menuToggle.setAttribute('aria-expanded', !isExpanded);
+
+            // إدارة overlay: أنشئ عنصر تغطية إذا لم يكن موجودًا ثم فعّله/أوقفه
+            let overlay = document.querySelector('.site-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'site-overlay';
+                document.body.appendChild(overlay);
+            }
+            if (opened) overlay.classList.add('active'); else overlay.classList.remove('active');
+
+            // إغلاق القائمة عند الضغط على الـ overlay
+            overlay.onclick = () => {
+                mainNav.classList.remove('is-open');
+                overlay.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            };
         });
     }
 
@@ -78,6 +94,21 @@ moreInfoButtons.forEach(button => {
         } else {
             button.textContent = 'اكتشف المزيد';
         }
+    });
+
+    // إغلاق القائمة عند النقر على أي رابط داخلها (تحسين تجربة المستخدم على المحمول)
+    const navLinks = document.querySelectorAll('#main-nav a');
+    navLinks.forEach(a => {
+        a.addEventListener('click', () => {
+            const mainNav = document.querySelector('#main-nav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (mainNav && mainNav.classList.contains('is-open')) {
+                mainNav.classList.remove('is-open');
+                const overlay = document.querySelector('.site-overlay');
+                if (overlay) overlay.classList.remove('active');
+                if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
     });
 });
 
