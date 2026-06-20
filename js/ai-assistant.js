@@ -1,20 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // رابط Webhook للشات في n8n (مقدم من المستخدم)
-    const N8N_WEBHOOK_URL = "https://aminmeabed12.app.n8n.cloud/webhook/09457984-80b4-4989-be4a-98e101344f65";
+    const N8N_WEBHOOK_URL = "https://aminhero12.app.n8n.cloud/webhook/agricultural-chatbot";
 
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-    // دالة لإضافة الرسائل إلى الواجهة
+    // دالة مساعدة: تهرب أي HTML لتجنّب الحقن
+    function escapeHTML(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // دالة مساعدة: تحويل نص بسيط إلى HTML مع دعم **bold** واحتفاظ بفواصل الأسطر
+    function formatTextToHTML(text) {
+        if (text == null) return '';
+        let safe = escapeHTML(text);
+        // تحويل **bold** إلى strong
+        safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        // المحافظة على فواصل الأسطر
+        safe = safe.replace(/\r?\n/g, '<br>');
+        return safe;
+    }
+
+    // دالة لإضافة الرسائل إلى الواجهة (تدعم تنسيق بسيط)
     function appendMessage(text, sender, isError = false) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
         if (isError) {
             messageDiv.classList.add('error-message');
         }
-        messageDiv.textContent = text;
+        messageDiv.innerHTML = formatTextToHTML(text);
         chatMessages.appendChild(messageDiv);
 
         chatMessages.scrollTop = chatMessages.scrollHeight; // التمرير للأسفل
@@ -126,18 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // إذا كانت الاستجابة تحتوي على قوالب n8n غير مُفسرة (مثلاً "{{ $node... }}")، نعرض رسالة إرشادية
             if (aiResponse && (/\{\{.*\}\}/.test(aiResponse) || aiResponse.includes('$node'))) {
                 console.warn('Received template-like aiResponse from n8n (not evaluated):', aiResponse, data);
-                waitingMessage.textContent = 'لم يتم تفسير استجابة n8n؛ يرجى تعديل الـ Workflow لإرجاع نص الإجابة. تحقق تعليمات الدعم في لوحة التحكم.';
+                waitingMessage.innerHTML = formatTextToHTML('لم يتم تفسير استجابة n8n؛ يرجى تعديل الـ Workflow لإرجاع نص الإجابة. تحقق تعليمات الدعم في لوحة التحكم.');
                 // ضع الاستجابة الكاملة في الكونسول لمساعدتك في التصحيح
                 console.log('Full n8n response object:', data);
             } else {
                 // تأكد من استخدام المتغير الصحيح. استخدم aiResponse (الذي استخرجناه أعلاه)
                 aiResponse = aiResponse || 'عذراً، لم يتم العثور على إجابة.';
-                waitingMessage.textContent = aiResponse; // تحديث رسالة الانتظار
+                waitingMessage.innerHTML = formatTextToHTML(aiResponse); // تحديث رسالة الانتظار (مع تنسيق)
             }
 
         } catch (error) {
             console.error("Error sending message:", error);
-            waitingMessage.textContent = `حدث ${error.message}`;
+            waitingMessage.innerHTML = formatTextToHTML(`حدث ${error.message}`);
             waitingMessage.classList.remove('system-message');
             waitingMessage.classList.add('error-message');
 
