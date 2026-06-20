@@ -7,6 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
+    // --- Session ID: unique per browser session/load to separate users/chats ---
+    const SESSION_KEY = 'ai_assistant_session_id';
+    function generateSessionId() {
+        return 'sess-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 9);
+    }
+    let currentSessionId = sessionStorage.getItem(SESSION_KEY);
+    if (!currentSessionId) {
+        currentSessionId = generateSessionId();
+        sessionStorage.setItem(SESSION_KEY, currentSessionId);
+    }
+    console.log('AI assistant sessionId:', currentSessionId);
+
     // دالة مساعدة: تهرب أي HTML لتجنّب الحقن
     function escapeHTML(str) {
         return String(str)
@@ -61,8 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // 🌟 إرسال الرسالة في مفتاح "userMessage" 🌟
-                body: JSON.stringify({ userMessage: message }),
+                // 🌟 إرسال الرسالة ومُعرّف الجلسة إلى n8n 🌟
+                body: JSON.stringify({ userMessage: message, sessionId: currentSessionId }),
             });
 
             // سجّل حالةHTTP ورؤوس الاستجابة لمساعدة التصحيح
