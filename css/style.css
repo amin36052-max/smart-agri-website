@@ -1,3 +1,57 @@
+/* Mobile-specific: make chat area wider and send button more visible */
+@media (max-width:600px) {
+    .chat-interface-container {
+        padding: 12px;
+        margin: 0 6px;
+        border-radius: 10px;
+    }
+
+    .chat-messages {
+        max-height: 58vh;
+        /* give more vertical space for messages */
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .message {
+        padding: 12px;
+        font-size: 0.98rem;
+        border-radius: 12px;
+    }
+
+    .chat-input-area {
+        gap: 8px;
+        padding-top: 8px;
+        align-items: stretch;
+        display: flex;
+    }
+
+    .chat-input-area input[type="text"] {
+        padding: 12px 14px;
+        font-size: 1rem;
+        height: 48px;
+        border-radius: 8px;
+    }
+
+    .chat-input-area button.cta-button {
+        padding: 0 16px;
+        min-width: 86px;
+        height: 48px;
+        align-self: center;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    /* Ensure input and button align nicely: input grows, button stays visible */
+    .chat-input-area input[type="text"] {
+        flex: 1 1 auto;
+    }
+
+    .chat-input-area button.cta-button {
+        flex: 0 0 auto;
+    }
+}
+
 /* -----------------------------------------------------------------
    1. المتغيرات والألوان الأساسية (Colors & Variables)
    ----------------------------------------------------------------- */
@@ -1028,7 +1082,8 @@ footer {
     word-break: break-word;
     box-shadow: 0 4px 10px rgba(36, 48, 58, 0.04);
     font-size: 1rem;
-    white-space: pre-wrap; /* يحافظ على فواصل الأسطر ويحافظ على الالتفاف */
+    white-space: pre-wrap;
+    /* يحافظ على فواصل الأسطر ويحافظ على الالتفاف */
     overflow-wrap: anywhere;
 }
 
@@ -1099,8 +1154,15 @@ footer {
 
 /* تحسين ظهور النصوص الطويلة داخل الفقاعة على الشاشات الصغيرة */
 @media (max-width:720px) {
-    .message { max-width: 100%; padding: 12px; font-size: 0.98rem; }
-    .chat-messages { padding: 10px; }
+    .message {
+        max-width: 100%;
+        padding: 12px;
+        font-size: 0.98rem;
+    }
+
+    .chat-messages {
+        padding: 10px;
+    }
 }
 
 .values-section h2 {
