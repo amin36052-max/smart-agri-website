@@ -12,7 +12,8 @@
         max-height: 58vh;
         padding: 6px;
         gap: 8px;
-        background: transparent; /* avoid large white card behind bubbles */
+        background: transparent;
+        /* avoid large white card behind bubbles */
         border-radius: 8px;
     }
 
@@ -24,7 +25,10 @@
         max-width: 84%;
     }
 
-    .system-message, .user-message { max-width: 84%; }
+    .system-message,
+    .user-message {
+        max-width: 84%;
+    }
 
     .chat-input-area {
         gap: 8px;
@@ -50,11 +54,16 @@
         background: var(--color-primary-green);
         color: #fff;
         border: none;
-        box-shadow: 0 6px 14px rgba(46,125,50,0.12);
+        box-shadow: 0 6px 14px rgba(46, 125, 50, 0.12);
     }
 
-    .chat-input-area input[type="text"] { flex: 1 1 auto; }
-    .chat-input-area button.cta-button { flex: 0 0 auto; }
+    .chat-input-area input[type="text"] {
+        flex: 1 1 auto;
+    }
+
+    .chat-input-area button.cta-button {
+        flex: 0 0 auto;
+    }
 }
 
 /* -----------------------------------------------------------------
@@ -400,21 +409,23 @@ nav ul li .active {
     text-align: center;
 }
 
-        max-height: 56vh; /* slightly taller but less padding */
-        padding: 6px;
-        gap: 8px;
-        background: transparent; /* remove big white box behind bubbles */
-        border-radius: 8px;
+max-height: 56vh;
+/* slightly taller but less padding */
+padding: 6px;
+gap: 8px;
+background: transparent;
+/* remove big white box behind bubbles */
+border-radius: 8px;
 /* -----------------------------------------------------------------
    7. التذييل (Footer)
    ----------------------------------------------------------------- */
-        padding: 10px 12px;
-    background-color: var(--color-text-dark);
-    color: white;
-        max-width: 86%;
-    text-align: center;
-    padding: 20px 0;
-    margin-top: 30px;
+padding: 10px 12px;
+background-color: var(--color-text-dark);
+color: white;
+max-width: 86%;
+text-align: center;
+padding: 20px 0;
+margin-top: 30px;
 }
 
 /* -----------------------------------------------------------------
