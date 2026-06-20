@@ -32,15 +32,93 @@ document.addEventListener('DOMContentLoaded', () => {
     // دالة مساعدة: تحويل نص بسيط إلى HTML مع دعم **bold** واحتفاظ بفواصل الأسطر
     function formatTextToHTML(text) {
         if (text == null) return '';
-        let safe = escapeHTML(text);
+        // نحتاج نسخة غير مهروبة للتحليل (الكشف عن الجداول/القوائم)
+        const raw = String(text);
+        let safe = escapeHTML(raw);
+
         // تحويل **bold** إلى strong
         safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-        // إذا النص يحتوي على رموز <br> كجزء من المحتوى (من n8n مثلاً)،
-        // فسنعيد تحويلها بعد الهروب لتصبح فواصل أسطر فعلية.
+
+        // إعادة تحويل أي &lt;br&gt; أو &lt;br/> المرتبطة بالمصدر إلى فواصل أسطر فعلية
         safe = safe.replace(/&lt;br\s*\/&gt;|&lt;br&gt;|&lt;br \/&gt;/gi, '<br>');
         // المحافظة على فواصل الأسطر العادية
         safe = safe.replace(/\r?\n/g, '<br>');
-        return safe;
+
+        // الآن نحاول تحويل أقسام الجداول البسيطة (الأسطر التي تحتوي على | ) إلى <table>
+        // سنحول كل كتلة متتالية من الأسطر التي تحتوي على | إلى جدول واحد.
+        const parts = safe.split(/(<br>)/i); // نحافظ على فواصل الأسطر
+        const out = [];
+        let inTable = false;
+        let tableRows = [];
+
+        function flushTable() {
+            if (!inTable) return;
+            if (tableRows.length > 0) {
+                const rowsHtml = tableRows.map(r => {
+                    const cells = r.split('|').map(c => c.trim());
+                    const tds = cells.map(c => `<td>${c || ''}</td>`).join('');
+                    return `<tr>${tds}</tr>`;
+                }).join('');
+                out.push(`<div class="msg-table-wrapper"><table class="msg-table">${rowsHtml}</table></div>`);
+            }
+            tableRows = [];
+            inTable = false;
+        }
+
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            if (part === '<br>') {
+                // keep as break unless we're inside a table (tables will handle their own rows)
+                if (inTable) {
+                    // treat break inside table as row separator
+                    continue;
+                } else {
+                    out.push('<br>');
+                    continue;
+                }
+            }
+
+            if (/\|/.test(part)) {
+                // this line looks like a table row
+                inTable = true;
+                // remove any surrounding <br> remnants
+                const row = part.replace(/^(<br>)+|(<br>)+$/g, '').trim();
+                if (row) tableRows.push(row);
+            } else {
+                // normal line
+                if (inTable) {
+                    // flush the collected table rows first
+                    flushTable();
+                }
+                // Convert lines that look like list items to <ul>
+                const trimmed = part.trim();
+                if (/^[-*]\s+/.test(trimmed)) {
+                    // collect contiguous list items
+                    const listItems = [trimmed.replace(/^[-*]\s+/, '')];
+                    // look ahead for following parts that are list items separated by <br>
+                    let j = i + 1;
+                    while (j < parts.length) {
+                        const np = parts[j];
+                        if (np === '<br>') { j++; continue; }
+                        if (/^[-*]\s+/.test(np.trim())) {
+                            listItems.push(np.trim().replace(/^[-*]\s+/, ''));
+                            parts[j] = ''; // consume
+                            j++;
+                        } else break;
+                    }
+                    out.push('<ul>' + listItems.map(li => `<li>${li}</li>`).join('') + '</ul>');
+                } else {
+                    out.push(part);
+                }
+            }
+        }
+        flushTable();
+
+        // الناتج
+        let result = out.join('');
+        // قد يحتوي على تكرار <br><br> فنبسطها
+        result = result.replace(/(<br>\s*){2,}/g, '<br><br>');
+        return result;
     }
 
     // دالة لإضافة الرسائل إلى الواجهة (تدعم تنسيق بسيط)

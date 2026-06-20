@@ -1,62 +1,56 @@
-/* Mobile-specific: compact chat layout and clearer send button */
+/* Mobile-specific: make chat area wider and send button more visible */
 @media (max-width:600px) {
     .chat-interface-container {
-        padding: 6px 8px;
+        padding: 12px;
         margin: 0 6px;
-        border-radius: 8px;
+        border-radius: 10px;
         width: 100%;
         max-width: 100%;
     }
 
     .chat-messages {
         max-height: 58vh;
-        padding: 6px;
-        gap: 8px;
-        background: transparent;
-        /* avoid large white card behind bubbles */
-        border-radius: 8px;
-    }
-
-    /* make bubbles narrower and less tall */
-    .message {
-        padding: 10px 12px;
-        font-size: 0.96rem;
+        /* give more vertical space for messages */
+        padding: 10px;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.98);
         border-radius: 10px;
-        max-width: 84%;
     }
 
-    .system-message,
-    .user-message {
-        max-width: 84%;
+    .message {
+        padding: 12px;
+        font-size: 0.98rem;
+        border-radius: 12px;
     }
 
     .chat-input-area {
         gap: 8px;
         padding-top: 8px;
-        align-items: center;
+        align-items: stretch;
         display: flex;
     }
 
     .chat-input-area input[type="text"] {
-        padding: 10px 12px;
+        padding: 12px 14px;
         font-size: 1rem;
-        height: 44px;
+        height: 48px;
         border-radius: 8px;
     }
 
     .chat-input-area button.cta-button {
-        padding: 0 14px;
-        min-width: 80px;
-        height: 44px;
+        padding: 0 16px;
+        min-width: 86px;
+        height: 48px;
         align-self: center;
         border-radius: 8px;
-        font-size: 0.98rem;
+        font-size: 1rem;
         background: var(--color-primary-green);
         color: #fff;
         border: none;
         box-shadow: 0 6px 14px rgba(46, 125, 50, 0.12);
     }
 
+    /* Ensure input and button align nicely: input grows, button stays visible */
     .chat-input-area input[type="text"] {
         flex: 1 1 auto;
     }
@@ -409,23 +403,20 @@ nav ul li .active {
     text-align: center;
 }
 
-max-height: 56vh;
-/* slightly taller but less padding */
-padding: 6px;
-gap: 8px;
-background: transparent;
-/* remove big white box behind bubbles */
-border-radius: 8px;
+.cta-button-small:hover {
+    background-color: var(--color-primary-green);
+    color: white;
+}
+
 /* -----------------------------------------------------------------
    7. التذييل (Footer)
    ----------------------------------------------------------------- */
-padding: 10px 12px;
-background-color: var(--color-text-dark);
-color: white;
-max-width: 86%;
-text-align: center;
-padding: 20px 0;
-margin-top: 30px;
+footer {
+    background-color: var(--color-text-dark);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 30px;
 }
 
 /* -----------------------------------------------------------------
@@ -1137,6 +1128,41 @@ margin-top: 30px;
     /* اجعل النص العريض أكبر نسبياً لتمييزه عن النص العادي */
     font-size: 1.08em;
     line-height: 1.25;
+}
+
+/* Styles for tables inside messages */
+.msg-table-wrapper {
+    overflow: auto;
+    margin: 6px 0;
+}
+
+.msg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.msg-table td {
+    padding: 6px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.msg-table tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.msg-table tr td:first-child {
+    font-weight: 700;
+    width: 30%;
+}
+
+.message ul {
+    margin: 6px 0;
+    padding-inline-start: 18px;
+}
+
+.message li {
+    margin: 4px 0;
 }
 
 .chat-input-area {
