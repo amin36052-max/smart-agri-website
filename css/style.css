@@ -4,6 +4,8 @@
         padding: 12px;
         margin: 0 6px;
         border-radius: 10px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .chat-messages {
@@ -11,6 +13,8 @@
         /* give more vertical space for messages */
         padding: 10px;
         gap: 10px;
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 10px;
     }
 
     .message {
@@ -40,6 +44,10 @@
         align-self: center;
         border-radius: 8px;
         font-size: 1rem;
+        background: var(--color-primary-green);
+        color: #fff;
+        border: none;
+        box-shadow: 0 6px 14px rgba(46, 125, 50, 0.12);
     }
 
     /* Ensure input and button align nicely: input grows, button stays visible */
