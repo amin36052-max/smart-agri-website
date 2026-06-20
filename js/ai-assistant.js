@@ -35,7 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let safe = escapeHTML(text);
         // تحويل **bold** إلى strong
         safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-        // المحافظة على فواصل الأسطر
+        // إذا النص يحتوي على رموز <br> كجزء من المحتوى (من n8n مثلاً)،
+        // فسنعيد تحويلها بعد الهروب لتصبح فواصل أسطر فعلية.
+        safe = safe.replace(/&lt;br\s*\/&gt;|&lt;br&gt;|&lt;br \/&gt;/gi, '<br>');
+        // المحافظة على فواصل الأسطر العادية
         safe = safe.replace(/\r?\n/g, '<br>');
         return safe;
     }

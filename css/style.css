@@ -1027,8 +1027,9 @@ footer {
     line-height: 1.65;
     word-break: break-word;
     box-shadow: 0 4px 10px rgba(36, 48, 58, 0.04);
-    font-size: 0.98rem;
-    white-space: normal;
+    font-size: 1rem;
+    white-space: pre-wrap; /* يحافظ على فواصل الأسطر ويحافظ على الالتفاف */
+    overflow-wrap: anywhere;
 }
 
 /* استخدم خط Cairo داخل واجهة المحادثة لضمان تجانس الخط */
@@ -1094,6 +1095,12 @@ footer {
     .message {
         max-width: 94%;
     }
+}
+
+/* تحسين ظهور النصوص الطويلة داخل الفقاعة على الشاشات الصغيرة */
+@media (max-width:720px) {
+    .message { max-width: 100%; padding: 12px; font-size: 0.98rem; }
+    .chat-messages { padding: 10px; }
 }
 
 .values-section h2 {
