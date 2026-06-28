@@ -70,6 +70,34 @@
     box-sizing: border-box;
 }
 
+.selected-location-box {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px dashed #7fbf7f;
+    background: #f3fbf3;
+    color: #2f6f2f;
+    font-weight: 700;
+    text-align: center;
+}
+
+.location-note {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #4b5563;
+    text-align: center;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
 /* تنسيق حاوية الأزرار لتصبح أفقية وتتوضع في الشبكة */
 .buttons-container.horizontal-buttons {
     /* خَلِ الحاوية تأخذ كامل عرض الشبكة لتوسيط الأزرار */
@@ -123,6 +151,17 @@
 .cta-button.accent-bg:hover {
     background-color: #3b71c7;
     border-color: #3b71c7;
+}
+
+.cta-button.success-bg {
+    background-color: #2e7d32;
+    border-color: #2e7d32;
+    color: white;
+}
+
+.cta-button.success-bg:hover {
+    background-color: #256528;
+    border-color: #256528;
 }
 
 .status-message {

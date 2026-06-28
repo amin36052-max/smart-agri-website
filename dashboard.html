@@ -20,7 +20,7 @@
 <body>
 
     <header class="main-header">
-        <div class="logo">SMART AGRI / GREEN MIND</div>
+        <div class="logo">نـبـتـة</div>
         <button class="menu-toggle" aria-controls="main-nav" aria-expanded="false">
             <span class="hamburger-icon"></span>
         </button>
@@ -39,18 +39,19 @@
     <main class="dashboard-container">
 
         <section class="location-input-section manual-data-input">
-            <h2><i class="fas fa-edit"></i> إدخال بيانات الرصد اليدوي والطقس</h2>
+            <h2><i class="fas fa-map-marker-alt"></i> اختيار موقع المزرعة وتحديث الطقس</h2>
 
             <div class="input-grid">
 
-                <div class="input-group">
-                    <label for="lat-input">خط العرض (Latitude)</label>
-                    <input type="text" id="lat-input" placeholder="مثال: 30.75" dir="ltr" required>
+                <div class="input-group selected-location-group">
+                    <label>الموقع الثابت</label>
+                    <div class="selected-location-box" id="selected-location-label">مزرعة دمو</div>
                 </div>
 
-                <div class="input-group">
-                    <label for="lon-input">خط الطول (Longitude)</label>
-                    <input type="text" id="lon-input" placeholder="مثال: 29.31" dir="ltr" required>
+                <div class="input-group location-note-group">
+                    <label>طريقة الاستخدام</label>
+                    <div class="location-note">اضغط على زر مزرعة دمو لتحديد الإحداثيات ثم تحديث بيانات الطقس مباشرة.
+                    </div>
                 </div>
 
                 <div class="input-group">
@@ -70,6 +71,8 @@
                 </div>
 
                 <div class="buttons-container horizontal-buttons">
+                    <button id="farm-damo-button" class="cta-button success-bg"><i class="fas fa-seedling"></i> مزرعة
+                        دمو</button>
                     <button id="save-data-button" class="cta-button primary-bg"><i class="fas fa-save"></i> حفظ</button>
                     <button id="fetch-weather-button" class="cta-button accent-bg"><i class="fas fa-cloud-sun"></i>
                         تحديث الطقس</button>
@@ -79,7 +82,8 @@
 
             </div>
 
-            <div id="location-status" class="status-message">أدخل الإحداثيات لحفظ القراءة وجلب الطقس.</div>
+            <div id="location-status" class="status-message">اضغط على زر مزرعة دمو لتحديد الموقع ثم تحديث بيانات الطقس.
+            </div>
         </section>
 
         <div id="dashboard-content">

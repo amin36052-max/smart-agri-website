@@ -8,18 +8,21 @@
 // ** الرجاء استبدال 'YOUR_OPENWEATHER_API_KEY' بالمفتاح الفعلي الخاص بك **
 const OPEN_WEATHER_API_KEY = 'df0e2b56de4d0d5b15811140a100fcc7';
 const LOCAL_STORAGE_KEY = 'smart_agri_local_readings';
+const FARM_DAMO_LOCATION = { name: 'مزرعة دمو', lat: 29.294711, lon: 30.918691 };
 
 // العناصر الأساسية في الصفحة
-const latInput = document.getElementById('lat-input');
-const lonInput = document.getElementById('lon-input');
 const dateInput = document.getElementById('date-input');
 const ndviInput = document.getElementById('ndvi-input'); // may be null if NDVI removed
 const moistureInput = document.getElementById('moisture-input');
 
+const farmDamoButton = document.getElementById('farm-damo-button');
 const saveDataButton = document.getElementById('save-data-button');
 const fetchWeatherButton = document.getElementById('fetch-weather-button');
 const resetDataButton = document.getElementById('reset-data-button');
 const locationStatus = document.getElementById('location-status');
+const selectedLocationLabel = document.getElementById('selected-location-label');
+
+let selectedFarmLocation = { ...FARM_DAMO_LOCATION };
 
 // متغيرات الرسوم البيانية (سيتم تهيئتها لاحقاً)
 let ndviChartInstance = null;
@@ -36,8 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // تحميل البيانات عند بدء التشغيل
         loadLocalDataAndRender();
+        applySelectedLocation(FARM_DAMO_LOCATION, false);
 
         // ربط الأزرار بشكل آمن (تجنب الأخطاء إن لم يكن العنصر موجودًا)
+        if (farmDamoButton) farmDamoButton.addEventListener('click', () => applySelectedLocation(FARM_DAMO_LOCATION, true));
+        else console.warn('farmDamoButton not found');
+
         if (saveDataButton) saveDataButton.addEventListener('click', saveManualData);
         else console.warn('saveDataButton not found');
 
@@ -214,17 +221,32 @@ function updateManualRecommendations(latestReading) {
 // قسم الطقس (OpenWeather API)
 // =================================================================
 
+function applySelectedLocation(location, shouldFetch = false) {
+    selectedFarmLocation = { ...location };
+
+    if (selectedLocationLabel) {
+        selectedLocationLabel.textContent = `${location.name} (${location.lat.toFixed(6)}, ${location.lon.toFixed(6)})`;
+    }
+
+    updateStatus(`تم اختيار ${location.name}. الإحداثيات جاهزة لتحديث الطقس تلقائياً.`, 'success');
+
+    if (shouldFetch) {
+        fetchOpenWeather();
+    }
+}
+
 // 8. دالة جلب بيانات OpenWeather
 async function fetchOpenWeather() {
-    const lat = latInput.value;
-    const lon = lonInput.value;
+    const location = selectedFarmLocation || FARM_DAMO_LOCATION;
+    const lat = location.lat;
+    const lon = location.lon;
 
-    if (!OPEN_WEATHER_API_KEY || !lat || !lon) {
-        updateStatus('الرجاء إدخال إحداثيات صالحة و التأكد من مفتاح OpenWeather API.', 'error');
+    if (!OPEN_WEATHER_API_KEY || lat == null || lon == null) {
+        updateStatus('تعذر تحديد الإحداثيات الثابتة أو مفتاح OpenWeather API.', 'error');
         return;
     }
 
-    updateStatus('جارٍ جلب بيانات الطقس لمدة 7 أيام قادمة...', 'info');
+    updateStatus(`جارٍ جلب بيانات الطقس لموقع ${location.name} لمدة 7 أيام قادمة...`, 'info');
 
     // One Call API 3.0: نجلب التوقعات اليومية لمدة 7 أيام
     const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=${OPEN_WEATHER_API_KEY}&units=metric&lang=ar`;
@@ -249,7 +271,7 @@ async function fetchOpenWeather() {
 
         const weatherData = await response.json();
         console.log('OpenWeather data received:', weatherData);
-        updateWeatherAndRecommendations(weatherData);
+        updateWeatherAndRecommendations(weatherData, location);
         // رسم المخططات وتحديث بطاقة التفاصيل عندما نحصل على One Call كامل
         try {
             if (weatherData && weatherData.daily) drawWeatherChart(weatherData.daily);
@@ -320,13 +342,15 @@ async function fetchCurrentWeatherFallback(lat, lon) {
 }
 
 // 9. تحديث بيانات الطقس والتوصيات
-function updateWeatherAndRecommendations(weatherData) {
+function updateWeatherAndRecommendations(weatherData, location = FARM_DAMO_LOCATION) {
     const today = weatherData.daily[0];
     const dailyForecasts = weatherData.daily.slice(0, 7);
 
     // تحديث KPI الطقس اليومي
     const avgTemp = (today.temp.day + today.temp.night) / 2;
     document.getElementById('kpi-weather-temp').textContent = `${avgTemp.toFixed(0)}°C`;
+    const kpiLocationEl = document.getElementById('kpi-location');
+    if (kpiLocationEl) kpiLocationEl.textContent = `${location.name}`;
 
     // تحديث التوصيات (إضافة توصيات الطقس إلى قائمة التنبيهات الموجودة)
     let weatherRecommendations = '';
@@ -368,9 +392,10 @@ function resetAllData() {
     if (!confirm('هل أنت متأكد من مسح جميع بيانات الرصد المحفوظة محلياً؟ لا يمكن التراجع عن هذا الإجراء.')) return;
 
     localStorage.removeItem(LOCAL_STORAGE_KEY);
-
-    if (latInput) latInput.value = '';
-    if (lonInput) lonInput.value = '';
+    selectedFarmLocation = { ...FARM_DAMO_LOCATION };
+    if (selectedLocationLabel) {
+        selectedLocationLabel.textContent = `${FARM_DAMO_LOCATION.name} (${FARM_DAMO_LOCATION.lat.toFixed(6)}, ${FARM_DAMO_LOCATION.lon.toFixed(6)})`;
+    }
 
     // إعادة تهيئة الواجهات
     const kpis = ['kpi-health', 'kpi-moisture', 'kpi-wind', 'kpi-weather-temp', 'kpi-location'];
